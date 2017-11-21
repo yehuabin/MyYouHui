@@ -8,12 +8,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.TextView;
+
+import com.yhb.myyouhui.fragment.ProductListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager vp_list;
+    List<ProductListFragment> fragmentList=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,20 +28,20 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        TextView textView= (TextView) findViewById(R.id.content);
-        String test="test";
-        for (int i=0;i<10;i++){
-            test+=test;
-        }
-        textView.setText(test);
 
         tabLayout= (TabLayout) findViewById(R.id.tab_category);
         vp_list= (ViewPager) findViewById(R.id.vp_list);
 
+
+       for (int i=0;i<6;i++){
+           fragmentList.add(new ProductListFragment());
+       }
+
+
         vp_list.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return null;
+                return fragmentList.get(position);
             }
 
             @Override
