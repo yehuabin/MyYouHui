@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="5dp"
-
     android:paddingTop="5dp"
     android:baselineAligned="false">
 
     <ImageView
         android:id="@+id/iv_thumb"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginRight="10dp"
         android:src="@drawable/shop"
         android:scaleType="fitXY" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
         android:baselineAligned="false"
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="公交车内国歌响起 海归小伙立刻起立致意" />
+                android:text="宝贝名称" />
         </LinearLayout>
 
         <LinearLayout
@@ -104,5 +105,31 @@
         </LinearLayout>
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:padding="5dp"
+        android:orientation="vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
+           android:src="@drawable/detail"
+            app:civ_border_width="2dp"
+
+            app:civ_border_color="@color/colorAccent"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:textColor="@color/colorAccent"
+            android:text="返￥5"
+            />
     </LinearLayout>
 </LinearLayout>
