@@ -2,112 +2,105 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:paddingBottom="5dp"
+
+    android:paddingTop="5dp"
     android:baselineAligned="false">
+
     <ImageView
         android:id="@+id/iv_thumb"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_marginRight="10dp"
-        android:scaleType="fitXY"/>
+        android:src="@drawable/shop"
+        android:scaleType="fitXY" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginRight="5dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-<ImageView
-    android:layout_width="20dp"
-    android:layout_height="20dp"
-    android:src="@drawable/ic_action_tmall"/>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/tmall" />
+
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="公交车内国歌响起 海归小伙立刻起立致意" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="6dp">
-               <TextView
-                   android:id="@+id/tv_author"
-                   android:layout_width="0dp"
-                   android:layout_weight="2"
-                   android:layout_height="wrap_content"
-                   android:text="现价 ￥19"
-                   android:textSize="12sp"
-                   android:textColor="@android:color/darker_gray"
-                   />
-               <TextView
-
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="已售24344件"
-                   android:textSize="12sp"
-                   android:textColor="@android:color/darker_gray"
-                   />
-           </LinearLayout>
-
-          <LinearLayout
-              android:layout_marginTop="6dp"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
-              <TextView
-                  android:id="@+id/tv_date"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="劵后价"
-                  android:textSize="12sp"
-                  android:textColor="@android:color/darker_gray"
-                  />
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginLeft="10dp"
-                  android:text="￥10"/>
-          </LinearLayout>
             <LinearLayout
-                android:layout_marginTop="6dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
 
+                <TextView
+                    android:id="@+id/tv_author"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="现价 ￥19"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已售24344件"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="劵后价"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="￥10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="劵100元  剩余1234张"
-                    android:textSize="12sp"
                     android:textColor="@android:color/darker_gray"
-                    />
+                    android:textSize="12sp" />
 
             </LinearLayout>
-<LinearLayout
-    android:layout_marginTop="6dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/shop"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="柒柒家 定制女装"/>
-</LinearLayout>
+
         </LinearLayout>
 
 
