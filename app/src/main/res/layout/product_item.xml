@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
     android:paddingBottom="5dp"
-    android:paddingTop="5dp"
-    android:baselineAligned="false">
+    android:paddingTop="5dp">
 
     <ImageView
         android:id="@+id/iv_thumb"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/shop"
-        android:scaleType="fitXY" />
+        android:layout_marginRight="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/shop" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
+        android:layout_weight="1"
         android:baselineAligned="false"
         android:orientation="vertical">
 
@@ -28,17 +28,21 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:id="@+id/iv_tmall"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="3dp"
                 android:src="@drawable/tmall" />
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="宝贝名称" />
+                android:text="宝贝名称"
+                android:textSize="12dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -52,15 +56,23 @@
                 android:layout_marginTop="6dp">
 
                 <TextView
-                    android:id="@+id/tv_author"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="现价 ￥19"
+                    android:text="现价 "
                     android:textColor="@android:color/darker_gray"
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tv_zkPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="￥19"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_biz30day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="已售24344件"
@@ -70,33 +82,43 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="劵后价"
+                    android:text="劵后价  ￥"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tv_realPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="￥10" />
+                    android:text="100"
+                    android:textSize="18dp" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp">
 
                 <TextView
+                    android:id="@+id/tv_couponAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="劵100元  剩余1234张"
+                    android:text="劵￥8"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tv_couponLeftCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:text="剩余483204"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="12sp" />
 
@@ -110,26 +132,31 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_gravity="center"
-        android:padding="5dp"
-        android:orientation="vertical">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="5dp"
-           android:src="@drawable/detail"
-            app:civ_border_width="2dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-            app:civ_border_color="@color/colorAccent"
-            />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:src="@drawable/detail" />
 
         <TextView
+            android:id="@+id/tv_tkCommFee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13dp"
+            android:text="￥5"
             android:textColor="@color/colorAccent"
-            android:text="返￥5"
-            />
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_tkRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="返20%"
+            android:textColor="@color/colorAccent"
+            android:textSize="9dp" />
     </LinearLayout>
 </LinearLayout>

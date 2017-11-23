@@ -760,13 +760,13 @@ public class ProductListModel {
             private String auctionId;
             private Object tkMktStatus;
             private String biz30day;
-            private String tkRate;
+            private float tkRate;
             private String includeDxjh;
             private String reservePrice;
             private String tkCommFee;
             private String totalFee;
             private String totalNum;
-            private String zkPrice;
+            private float zkPrice;
             private String auctionTag;
             private String auctionUrl;
             private String rlRate;
@@ -779,11 +779,11 @@ public class ProductListModel {
             private String couponLeftCount;
             private String couponLink;
             private String couponLinkTaoToken;
-            private String couponAmount;
+            private float couponAmount;
             private String dayLeft;
             private Object couponShortLink;
             private String couponInfo;
-            private String couponStartFee;
+            private float couponStartFee;
             private String couponEffectiveStartTime;
             private String couponEffectiveEndTime;
             private Object eventRate;
@@ -907,11 +907,11 @@ public class ProductListModel {
                 this.biz30day = biz30day;
             }
 
-            public String getTkRate() {
+            public float getTkRate() {
                 return tkRate;
             }
 
-            public void setTkRate(String tkRate) {
+            public void setTkRate(float tkRate) {
                 this.tkRate = tkRate;
             }
 
@@ -955,11 +955,11 @@ public class ProductListModel {
                 this.totalNum = totalNum;
             }
 
-            public String getZkPrice() {
+            public float getZkPrice() {
                 return zkPrice;
             }
 
-            public void setZkPrice(String zkPrice) {
+            public void setZkPrice(float zkPrice) {
                 this.zkPrice = zkPrice;
             }
 
@@ -1059,11 +1059,11 @@ public class ProductListModel {
                 this.couponLinkTaoToken = couponLinkTaoToken;
             }
 
-            public String getCouponAmount() {
+            public float getCouponAmount() {
                 return couponAmount;
             }
 
-            public void setCouponAmount(String couponAmount) {
+            public void setCouponAmount(float couponAmount) {
                 this.couponAmount = couponAmount;
             }
 
@@ -1091,11 +1091,11 @@ public class ProductListModel {
                 this.couponInfo = couponInfo;
             }
 
-            public String getCouponStartFee() {
+            public float getCouponStartFee() {
                 return couponStartFee;
             }
 
-            public void setCouponStartFee(String couponStartFee) {
+            public void setCouponStartFee(float couponStartFee) {
                 this.couponStartFee = couponStartFee;
             }
 

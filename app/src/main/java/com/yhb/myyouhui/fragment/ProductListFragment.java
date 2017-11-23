@@ -36,7 +36,7 @@ public class ProductListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
-        String url = "http://pub.alimama.com/items/search.json?toPage=1&queryType=2&auctionTag=&perPageSize=50&shopTag=yxjh&t=1511356918100&_tb_token_=55d6e33b0636&pvid=10_115.234.20.20_393_1511356917758";
+        String url = "http://pub.alimama.com/items/search.json?toPage=1&queryType=2&auctionTag=&perPageSize=20&shopTag=yxjh&t=1511356918100&_tb_token_=55d6e33b0636&pvid=10_115.234.20.20_393_1511356917758";
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
 
