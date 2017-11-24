@@ -50,10 +50,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         textView.setText(item.getTitle().replace("<span class=H>", "").replace("</span>", ""));
         float clientTkRate=item.getTkRate()/2;
         TextView tv_tkRate = (TextView) holder.rootView.findViewById(R.id.tv_tkRate);
-        tv_tkRate.setText("返" + TextUtil.clearZero(clientTkRate) + "%");
+        tv_tkRate.setText("返现" + TextUtil.clearZero(clientTkRate) + "%");
 
         TextView tv_tkCommFee = (TextView) holder.rootView.findViewById(R.id.tv_tkCommFee);
-        tv_tkCommFee.setText("￥"+ TextUtil.clearZero(String.format("%.1f",realPrice*(clientTkRate/100))));
+        tv_tkCommFee.setText("奖￥"+ TextUtil.clearZero(String.format("%.1f",realPrice*(clientTkRate/100))));
 
         TextView tv_biz30day = (TextView) holder.rootView.findViewById(R.id.tv_biz30day);
         tv_biz30day.setText("已售"+ TextUtil.getBiz30day(item.getBiz30day())+"件");
@@ -63,7 +63,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         tv_zkPrice.setText("￥"+TextUtil.clearZero( item.getZkPrice()));
 
         TextView tv_couponAmount = (TextView) holder.rootView.findViewById(R.id.tv_couponAmount);
-        tv_couponAmount.setText("劵￥"+ TextUtil.clearZero(item.getCouponAmount()));
+        tv_couponAmount.setText("￥"+ TextUtil.clearZero(item.getCouponAmount()));
 
         TextView tv_couponLeftCount = (TextView) holder.rootView.findViewById(R.id.tv_couponLeftCount);
         tv_couponLeftCount.setText("剩余"+ item.getCouponLeftCount()+"张");
