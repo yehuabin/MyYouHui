@@ -150,7 +150,7 @@
         android:gravity="center"
         android:orientation="vertical"
 
-        android:paddingRight="10dp">
+        android:paddingRight="8dp">
 
         <ImageView
             android:layout_width="40dp"
@@ -164,7 +164,7 @@
             android:layout_height="wrap_content"
             android:text="奖￥5"
             android:textColor="@color/colorAccent"
-            android:textSize="16dp" />
+            android:textSize="14dp" />
 
 
     </LinearLayout>
