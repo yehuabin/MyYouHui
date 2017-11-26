@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
+import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade;
 
 /**
  * Created by Administrator on 2017/11/25.
@@ -39,7 +42,7 @@ public class ViewHolder {
             view = mRootView.findViewById(resId);
             mViews.put(resId, view);
         }
-        if (view == null){
+        if (view == null) {
 
         }
         return (T) view;
@@ -75,12 +78,22 @@ public class ViewHolder {
         return setText(text, res_id);
     }
 
-    public void loadImage(Context context, String url, int res_id) {
+    public void loadImage(Context context, String url, int res_id, int place_id) {
         ImageView imageView = get(res_id);
         String url2 = url;
-        if (url.contains("diycode"))
-            url2 = url.replace("large_avatar", "avatar");
-        Glide.with(context).load(url2).into(imageView);
+        RequestOptions requestOptions = new RequestOptions();
+        if (place_id > 0) {
+            requestOptions.placeholder(place_id);
+        }
+        Glide.with(context)
+                .asBitmap().load(url2)
+                .apply(requestOptions)
+                .transition(withCrossFade(500))
+                .into(imageView);
+    }
+
+    public void loadImage(Context context, String url, int res_id) {
+        loadImage(context, url, res_id, 0);
     }
 
     /**

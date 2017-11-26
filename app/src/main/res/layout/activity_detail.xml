@@ -10,6 +10,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:scrollbars="none">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,7 +24,8 @@
             <com.yhb.myyouhui.views.ResizableImageView
                 android:id="@+id/iv_picture"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
+
                 />
 
             <LinearLayout
@@ -54,6 +56,7 @@
                 android:paddingRight="10dp">
 
                 <ImageView
+                    android:id="@+id/iv_quan"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/quanhoujia" />
@@ -76,6 +79,7 @@
                 android:paddingRight="10dp">
 
                 <TextView
+
                     android:id="@+id/tv_zkPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -104,6 +108,7 @@
                 android:paddingBottom="5dp">
 
                 <LinearLayout
+                    android:id="@+id/ll_quan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false">
@@ -185,6 +190,7 @@
                     android:id="@+id/tv_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:text="点击加载图文详情" />
 
                 <ImageView
@@ -192,6 +198,13 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/click" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_detail"
+                    android:layout_width="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
 
@@ -209,6 +222,7 @@
             android:alpha="0.5"
             android:layout_margin="10dp"
             android:background="@drawable/back" />
+
     </RelativeLayout>
 
     <LinearLayout

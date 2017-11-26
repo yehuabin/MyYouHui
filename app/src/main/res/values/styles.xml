@@ -9,5 +9,8 @@
 
 
     </style>
-
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#707070</item>
+        <item name="colorControlActivated">#707070</item>
+    </style>
 </resources>

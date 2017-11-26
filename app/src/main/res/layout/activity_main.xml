@@ -14,7 +14,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways">
 
@@ -26,23 +26,24 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:src="@drawable/search" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:autoLink="all"
+                        android:textSize="14sp"
                         android:paddingLeft="5dp"
-                        android:text="请输入要搜索的宝贝标题"
+                        android:text="@string/search_text"
                         android:textColor="@android:color/white" />
                 </LinearLayout>
 

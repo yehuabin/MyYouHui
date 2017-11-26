@@ -92,6 +92,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         holder.setText(R.id.tv_couponLeftCount, "剩余" + couponLeftCount + "张");
         holder.setText(R.id.tv_realPrice, realPriceStr);
 
+
         TextView tv_zkPrice = holder.get(R.id.tv_zkPrice);
         tv_zkPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         tv_zkPrice.setText("￥" + zkPrice);
@@ -103,6 +104,19 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 .transition(BitmapTransitionOptions.withCrossFade(500))
                 .into(pictView);
 
+        if (item.getCouponAmount()==0){
+            //没有优惠券不显示优惠券文字信息
+            holder.get(R.id.ll_quan).setVisibility(View.GONE);
+            holder.get(R.id.tv_zkPrice).setVisibility(View.GONE);
+            holder.setText(R.id.tv_realPriceDesc,"现价￥");
+            holder.get(R.id.tv_zkPriceDesc).setVisibility(View.GONE);
+        }
+        else {
+            holder.get(R.id.ll_quan).setVisibility(View.VISIBLE);
+            holder.get(R.id.tv_zkPrice).setVisibility(View.VISIBLE);
+            holder.setText(R.id.tv_realPriceDesc,"券后价￥");
+            holder.get(R.id.tv_zkPriceDesc).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

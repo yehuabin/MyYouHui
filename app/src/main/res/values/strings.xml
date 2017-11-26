@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MY优惠</string>
+    <string name="search_text">请输入要搜索的宝贝名称</string>
 </resources>
