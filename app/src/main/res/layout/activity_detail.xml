@@ -50,6 +50,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_quanPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
@@ -98,11 +99,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#efeded"
                 android:orientation="vertical"
-
+                android:gravity="center_vertical"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">

@@ -80,13 +80,13 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 intent.putExtra("couponStartFee", couponStartFee);//满多少使用
                 intent.putExtra("userType", userType);//是否天猫
                 intent.putExtra("commFee", commFee);//可领红包
-                intent.putExtra("auctionId", auctionId);//可领红包
+                intent.putExtra("auctionId", auctionId);//商品id
                 inflater.getContext().startActivity(intent);
             }
         });
         holder.setText(R.id.tv_title, title);
         holder.setText(R.id.tv_tkRate, "返现" + TextUtil.clearZero(clientTkRate) + "%");
-        holder.setText(R.id.tv_tkCommFee, "奖￥" + commFee);
+        holder.setText(R.id.tv_tkCommFee, "返￥" + commFee);
         holder.setText(R.id.tv_biz30day, "已售" + biz30day + "件");
         holder.setText(tv_couponAmount, "￥" + couponAmount);
         holder.setText(R.id.tv_couponLeftCount, "剩余" + couponLeftCount + "张");

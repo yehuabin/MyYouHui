@@ -43,7 +43,7 @@ public class ResultActivity extends BaseActivity {
         Intent intent = getIntent();
         final String keyword = intent.getStringExtra("keyword");
         final ProductListFragment productListFragment = new ProductListFragment();
-        viewPager = mViewHolder.get(R.id.viewPage);
+        viewPager = mViewHolder.get(R.id.vp_list);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {

@@ -11,4 +11,8 @@ public class UrlUtil {
     public static String getSearchUrl(String keyword){
         return getSearchUrl(1,keyword);
     }
+    public static String getNZJH() {
+        String url = "http://pub.alimama.com/items/channel/nzjh.json?channel=nzjh&perPageSize=12&shopTag=&toPage=1";
+        return url;
+    }
 }

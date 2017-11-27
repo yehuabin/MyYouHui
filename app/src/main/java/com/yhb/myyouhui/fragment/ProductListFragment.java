@@ -13,9 +13,8 @@ import com.google.gson.Gson;
 import com.yhb.myyouhui.R;
 import com.yhb.myyouhui.adapter.ProductListAdapter;
 import com.yhb.myyouhui.model.ProductListModel;
-import com.yhb.myyouhui.utils.HttpUtil;
 import com.yhb.myyouhui.utils.LineDecoration;
-import com.yhb.myyouhui.utils.UrlUtil;
+import com.yhb.myyouhui.utils.TaoBaoHelper;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,18 +38,18 @@ public class ProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
         Bundle bundle= getArguments();
-        String url = UrlUtil.getSearchUrl(bundle.getString("keyword"));
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
         recyclerView.addItemDecoration(new LineDecoration(inflater.getContext(), LineDecoration.VERTICAL_LIST));
         recyclerView.setLayoutManager(linearLayoutManager);
-        loadData(url);
+        loadData();
         return view;
     }
 
-    private void loadData(String url) {
-        HttpUtil.Request(url, new Callback() {
+    private void loadData() {
+        TaoBaoHelper.seachNZJH(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -74,5 +73,6 @@ public class ProductListFragment extends Fragment {
 
             }
         });
+
     }
 }
