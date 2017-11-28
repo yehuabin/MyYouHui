@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.yhb.myyouhui.DetailActivity;
 import com.yhb.myyouhui.R;
-import com.yhb.myyouhui.model.ProductListModel;
+import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.utils.TextUtil;
 
 import java.util.List;
@@ -27,9 +27,9 @@ import static com.yhb.myyouhui.R.id.tv_couponAmount;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
     LayoutInflater inflater;
-    List<ProductListModel.DataBean.PageListBean> data;
+    List<ProductModel> data;
 
-    public ProductListAdapter(LayoutInflater inflater, List<ProductListModel.DataBean.PageListBean> data) {
+    public ProductListAdapter(LayoutInflater inflater, List<ProductModel> data) {
 
         this.data = data;
         this.inflater = inflater;
@@ -37,18 +37,31 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == 1) {
+            return new ViewHolder(inflater.inflate(R.layout.foot_loadmore_item, parent,false));
+        }
         View view = inflater.inflate(R.layout.product_item, null);
         ProductListAdapter.ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public int getItemViewType(int position) {
+        if (position == data.size()) {
+            return 1;
+        }
+        return 0;
+    }
 
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (position == data.size()) {
+            return;
+        }
         ImageView pictView = holder.get(R.id.iv_thumb);
         ImageView iv_tmall = holder.get(R.id.iv_tmall);
 
-        ProductListModel.DataBean.PageListBean item = data.get(position);
+        ProductModel item = data.get(position);
         float realPrice = item.getZkPrice();
         if (item.getCouponStartFee() <= realPrice) {
             realPrice = realPrice - item.getCouponAmount();
@@ -62,9 +75,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         final String realPriceStr = TextUtil.clearZero(realPrice);
         final String userType = item.getUserType();
         final String pictUrl = "http:" + item.getPictUrl();
-        final String auctionId=item.getAuctionId();
-        final float couponStartFee=item.getCouponStartFee();
-        final String commFee=TextUtil.clearZero(String.format("%.1f", realPrice * (clientTkRate / 100)));
+        final String auctionId = item.getAuctionId();
+        final float couponStartFee = item.getCouponStartFee();
+        final String commFee = TextUtil.clearZero(String.format("%.1f", realPrice * (clientTkRate / 100)));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,24 +117,33 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
                 .transition(BitmapTransitionOptions.withCrossFade(500))
                 .into(pictView);
 
-        if (item.getCouponAmount()==0){
+        if (item.getCouponAmount() == 0) {
             //没有优惠券不显示优惠券文字信息
             holder.get(R.id.ll_quan).setVisibility(View.GONE);
             holder.get(R.id.tv_zkPrice).setVisibility(View.GONE);
-            holder.setText(R.id.tv_realPriceDesc,"现价￥");
+            holder.setText(R.id.tv_realPriceDesc, "现价￥");
             holder.get(R.id.tv_zkPriceDesc).setVisibility(View.GONE);
-        }
-        else {
+        } else {
             holder.get(R.id.ll_quan).setVisibility(View.VISIBLE);
             holder.get(R.id.tv_zkPrice).setVisibility(View.VISIBLE);
-            holder.setText(R.id.tv_realPriceDesc,"券后价￥");
+            holder.setText(R.id.tv_realPriceDesc, "券后价￥");
             holder.get(R.id.tv_zkPriceDesc).setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data.size()+1;
+    }
+
+    public void addMore(List<ProductModel> moreData) {
+        data.addAll(moreData);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

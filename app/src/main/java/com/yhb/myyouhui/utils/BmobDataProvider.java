@@ -18,7 +18,7 @@ import cn.bmob.v3.listener.FindListener;
  */
 
 public class BmobDataProvider {
-    public static void search(SearchModel searchModel, final SearchCallback searchCallback) {
+    public static void search(final SearchModel searchModel, final SearchCallback searchCallback) {
 
         BmobQuery<ProductModel> eq1 = new BmobQuery<ProductModel>();
         BmobQuery<ProductModel> eq2 = new BmobQuery<ProductModel>();
@@ -30,7 +30,7 @@ public class BmobDataProvider {
             andQuerys.add(eq1);
         }
         if (searchModel.isOnlyTmall()) {
-            eq2.addWhereEqualTo("userType", 1);
+            eq2.addWhereEqualTo("userType", "1");
             andQuerys.add(eq2);
         }
         eq3.addWhereEqualTo("sortType", searchModel.getSortType());
@@ -42,14 +42,15 @@ public class BmobDataProvider {
         BmobQuery<ProductModel> query = new BmobQuery<ProductModel>();
         query.and(andQuerys);
         //返回50条数据，如果不加上这条语句，默认返回10条数据
-        query.setLimit(20);
-        query.setSkip(searchModel.getPage() * 20);
+        query.setLimit(SearchModel.PAGE_SIZE);
+        query.setSkip(searchModel.getPage() * SearchModel.PAGE_SIZE);
         //执行查询方法
         query.findObjects(new FindListener<ProductModel>() {
             @Override
             public void done(List<ProductModel> object, BmobException e) {
                 if (e == null) {
                     searchCallback.response(object);
+
                 } else {
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
