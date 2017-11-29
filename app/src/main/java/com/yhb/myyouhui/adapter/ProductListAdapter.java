@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,8 @@ import static com.yhb.myyouhui.R.id.tv_couponAmount;
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
     LayoutInflater inflater;
     List<ProductModel> data;
+    boolean isLoadOver = false;
+    private RelativeLayout mFooterLayout;//footer view
 
     public ProductListAdapter(LayoutInflater inflater, List<ProductModel> data) {
 
@@ -37,8 +40,27 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (mFooterLayout == null) {
+            mFooterLayout = new RelativeLayout(parent.getContext());
+        }
+        if (data == null || data.size() == 0) {
+            mFooterLayout.removeAllViews();
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    150);
+
+
+            mFooterLayout.addView(inflater.inflate(R.layout.foot_empty, parent, false), params);
+            return new ViewHolder(mFooterLayout);
+        }
         if (viewType == 1) {
-            return new ViewHolder(inflater.inflate(R.layout.foot_loadmore_item, parent,false));
+
+            mFooterLayout.removeAllViews();
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    150);
+
+
+            mFooterLayout.addView(inflater.inflate(R.layout.foot_loadmore_item, parent, false), params);
+            return new ViewHolder(mFooterLayout);
         }
         View view = inflater.inflate(R.layout.product_item, null);
         ProductListAdapter.ViewHolder viewHolder = new ViewHolder(view);
@@ -133,12 +155,35 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public int getItemCount() {
-        return data.size()+1;
+        return data.size() + 1;
     }
 
     public void addMore(List<ProductModel> moreData) {
         data.addAll(moreData);
         notifyDataSetChanged();
+    }
+
+    public void noMore() {
+        mFooterLayout.removeAllViews();
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                150);
+
+        mFooterLayout.addView(inflater.inflate(R.layout.foot_loadover, null), params);
+        isLoadOver = true;
+    }
+
+    public void setEmpty(){
+
+            mFooterLayout.removeAllViews();
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    150);
+
+            mFooterLayout.addView(inflater.inflate(R.layout.foot_empty, null), params);
+            isLoadOver = true;
+
+    }
+    public boolean isLoadOver() {
+        return isLoadOver;
     }
 
     public void clear() {

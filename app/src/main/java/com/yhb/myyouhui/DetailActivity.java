@@ -200,7 +200,7 @@ public class DetailActivity extends BaseActivity {
         TaoBaoHelper.generateCoupon(auctionId, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                toastLong("复制失败，请联系技术人员");
+                toastLong("复制失败，请稍后重试");
             }
 
             @Override
@@ -213,7 +213,7 @@ public class DetailActivity extends BaseActivity {
                         callBack.execute(couponModel);
                     }
                 } else {
-                    toastLong("复制失败，请联系技术人员");
+                    toastLong("复制失败，请稍后重试");
                 }
 
             }

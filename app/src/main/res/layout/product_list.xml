@@ -10,10 +10,11 @@
 
 
 
-    <android.support.v4.view.ViewPager
+    <com.yhb.myyouhui.views.NoScrollViewPager
         android:id="@+id/vp_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+
+        android:layout_height="wrap_content"></com.yhb.myyouhui.views.NoScrollViewPager>
 
 </LinearLayout>
 

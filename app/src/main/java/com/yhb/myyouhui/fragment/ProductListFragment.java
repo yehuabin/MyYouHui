@@ -20,6 +20,7 @@ import com.yhb.myyouhui.callback.SearchCallback;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
 import com.yhb.myyouhui.utils.BmobDataProvider;
+import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.utils.LineDecoration;
 
 import java.util.List;
@@ -44,7 +45,11 @@ public class ProductListFragment extends Fragment {
         View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
         Bundle bundle = getArguments();
-searchModel.setCategory("nzjh");
+        String type = bundle.getString("type");
+        int position = bundle.getInt("position");
+        if (type == "index") {
+            searchModel.setCategory(CategoryUtil.getVal(String.valueOf(position)));
+        }
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
@@ -55,7 +60,7 @@ searchModel.setCategory("nzjh");
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount() && !adapter.isLoadOver()) {
                     searchModel.setPage(searchModel.getPage() + 1);
 
 
@@ -86,18 +91,21 @@ searchModel.setCategory("nzjh");
         ck_onlyQuan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setSortType();
                 search();
             }
         });
         ck_onlyTmall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setSortType();
                 search();
             }
         });
         tl_sortType.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                setSortType();
                 search();
             }
 
@@ -114,8 +122,24 @@ searchModel.setCategory("nzjh");
         return view;
     }
 
+    private int sortType = 0;
+
+    private void setSortType() {
+        if (tl_sortType.getSelectedTabPosition() == 0) {
+            sortType = 0;
+        } else if (tl_sortType.getSelectedTabPosition() == 1) {
+            sortType = 1;
+        } else if (tl_sortType.getSelectedTabPosition() == 2) {
+            sortType = 9;
+        } else if (tl_sortType.getSelectedTabPosition() == 3) {
+            sortType = 3;
+        }
+    }
+
     private void search() {
-        searchModel.setSortType(tl_sortType.getSelectedTabPosition());
+
+        adapter.setEmpty();
+        searchModel.setSortType(sortType);
         searchModel.setOnlyQuan(ck_onlyQuan.isChecked());
         searchModel.setOnlyTmall(ck_onlyTmall.isChecked());
         searchModel.setPage(0);
@@ -132,6 +156,10 @@ searchModel.setCategory("nzjh");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (data.size() == 0) {
+                            adapter.noMore();
+                            return;
+                        }
                         if (searchModel.getPage() == 0) {
                             adapter = new ProductListAdapter(inflater, data);
                             recyclerView.setAdapter(adapter);
@@ -141,6 +169,7 @@ searchModel.setCategory("nzjh");
                     }
 
                 });
-            }});
+            }
+        });
     }
 }

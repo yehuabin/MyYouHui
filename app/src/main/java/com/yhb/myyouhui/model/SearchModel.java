@@ -5,7 +5,7 @@ package com.yhb.myyouhui.model;
  */
 
 public class SearchModel {
-    public static int PAGE_SIZE=10;
+    public static int PAGE_SIZE=12;
     public static int ZONGHE=0;//综合排序
     public static int FANXIAN=1;//返现比率排序
     public static int JIAGE_SHENG=4;//价格升序

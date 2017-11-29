@@ -1,22 +1,21 @@
 package com.yhb.myyouhui;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.baidu.mobstat.StatService;
-import com.pgyersdk.javabean.AppBean;
 import com.pgyersdk.update.PgyUpdateManager;
-import com.pgyersdk.update.UpdateManagerListener;
 import com.yhb.myyouhui.fragment.ProductListFragment;
 import com.yhb.myyouhui.search.SearchActivity;
+import com.yhb.myyouhui.utils.CategoryUtil;
+import com.yhb.myyouhui.utils.TaoBaoHelper;
+import com.yhb.myyouhui.views.NoScrollViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,52 +27,24 @@ public class MainActivity extends BaseActivity {
     TabLayout tab_category;
 
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
 
-    ViewPager vp_list;
+    NoScrollViewPager vp_list;
 
-    List<ProductListFragment> fragmentList = new ArrayList<>();
+    List<Fragment> fragmentList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bmob.initialize(this, "9be40913fa1a1f940dc81aafa1139757");
         PgyUpdateManager.setIsForced(true); //设置是否强制更新。true为强制更新；false为不强制更新（默认值）。
-        PgyUpdateManager.register(MainActivity.this,
-                new UpdateManagerListener() {
-
-                    @Override
-                    public void onUpdateAvailable(final String result) {
-
-                        // 将新版本信息封装到AppBean中
-                        final AppBean appBean = getAppBeanFromString(result);
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("更新")
-                                .setMessage("")
-                                .setNegativeButton(
-                                        "确定",
-                                        new DialogInterface.OnClickListener() {
-
-                                            @Override
-                                            public void onClick(
-                                                    DialogInterface dialog,
-                                                    int which) {
-                                                startDownloadTask(
-                                                        MainActivity.this,
-                                                        appBean.getDownloadURL());
-                                            }
-                                        }).show();
-                    }
-
-                    @Override
-                    public void onNoUpdateAvailable() {
-                    }
-                });
+        PgyUpdateManager.register(MainActivity.this);
         StatService.start(this);
+        TaoBaoHelper.loadCookie(null);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -81,8 +52,8 @@ public class MainActivity extends BaseActivity {
 
         tab_category = mViewHolder.get(R.id.tab_category);
         vp_list = mViewHolder.get(R.id.vp_list);
-
-        final int count = 11;
+        vp_list.setNoScroll(true);
+        final int count = CategoryUtil.getCount();
         for (int i = 0; i < count; i++) {
             fragmentList.add(new ProductListFragment());
         }
@@ -95,38 +66,50 @@ public class MainActivity extends BaseActivity {
         }, R.id.ll_search);
 
         vp_list.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+
             @Override
             public Fragment getItem(int position) {
                 Fragment fragment = fragmentList.get(position);
                 Bundle bundle = new Bundle();
-                bundle.putString("keyword", "女装");
+                bundle.putInt("position", position);
+                bundle.putString("type", "index");
                 fragment.setArguments(bundle);
                 return fragment;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return CategoryUtil.getText(String.valueOf(position));
             }
 
             @Override
             public int getCount() {
                 return count;
             }
+            @Override
+            public Fragment instantiateItem(ViewGroup container, int position) {
+                Fragment fragment = (Fragment) super.instantiateItem(container,
+                        position);
+                getSupportFragmentManager().beginTransaction().show(fragment).commit();
+
+                return fragment;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                // super.destroyItem(container, position, object);
+                Fragment fragment = fragmentList.get(position);
+                getSupportFragmentManager().beginTransaction().hide(fragment).commit();
+
+            }
         });
 
-        tab_category.addTab(tab_category.newTab().setText("女装"));//http://pub.alimama.com/promo/item/channel/index.htm?channel=nzjh&toPage=1
-        tab_category.addTab(tab_category.newTab().setText("男装"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=ifs&toPage=1&catIds=30&level=1
-        tab_category.addTab(tab_category.newTab().setText("母婴"));//http://pub.alimama.com/promo/item/channel/index.htm?channel=muying
-        tab_category.addTab(tab_category.newTab().setText("食品"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=hch
-        tab_category.addTab(tab_category.newTab().setText("家居"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=jyj
-        tab_category.addTab(tab_category.newTab().setText("亲宝贝"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=qbb
-        tab_category.addTab(tab_category.newTab().setText("运动户外"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=kdc
-        tab_category.addTab(tab_category.newTab().setText("时尚"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=ifs
-        tab_category.addTab(tab_category.newTab().setText("9块9"));//http://pub.alimama.com/promo/item/channel/index.htm?channel=9k9
-        tab_category.addTab(tab_category.newTab().setText("20元封顶"));//http://pub.alimama.com/promo/item/channel/index.htm?channel=20k
-        tab_category.addTab(tab_category.newTab().setText("特价好货"));//http://pub.alimama.com/promo/item/channel/index.htm?channel=tehui
-        tab_category.addTab(tab_category.newTab().setText("淘宝DIY"));//http://pub.alimama.com/promo/item/oe_channel/index.htm?channel=diy
-
+        for (int i = 0; i < CategoryUtil.getCount(); i++) {
+            tab_category.addTab(tab_category.newTab().setText(CategoryUtil.getText(String.valueOf(i))));
+        }
         tab_category.setTabMode(TabLayout.MODE_SCROLLABLE);
-
+        tab_category.setupWithViewPager(vp_list);
     }
-
 
 
     @Override

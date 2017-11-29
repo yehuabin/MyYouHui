@@ -14,26 +14,21 @@ import okhttp3.Response;
 
 public class TaoBaoHelper {
     private static final String TAG = "TaoBaoHelper";
-    private static  String cookie = "19741e6c14bb32db41d5e14450885bf0";
-    private static  String searchCookie = "frKiEpBaJFECAT2kgLpjUqMb";
+
+    public static  String GLOABL_COOKIE = "";
+    //private static  String searchCookie = "frKiEpBaJFECAT2kgLpjUqMb";
     public static void generateCoupon(String auctionId,Callback callback){
-        OkHttpClient okHttpClient = getClient("cookie2",getCookie());
+        OkHttpClient okHttpClient = getClient("cookie2",GLOABL_COOKIE);
 
         Request request = new Request.Builder().url("http://pub.alimama.com/common/code/getAuctionCode.json?auctionid="+auctionId+"&adzoneid=148716480&siteid=39748344&scenes=1").build();
 
         okHttpClient.newCall(request).enqueue(callback);
     }
 
-    public static void seachNZJH(Callback callback){
-        OkHttpClient okHttpClient = getClient("cna",searchCookie);
 
-        Request request = new Request.Builder().url(UrlUtil.getSearchUrl("")).build();
-
-        okHttpClient.newCall(request).enqueue(callback);
-    }
 
     public static void isLogin(Callback callback){
-        OkHttpClient okHttpClient = getClient("cookie2",getCookie());
+        OkHttpClient okHttpClient = getClient("cookie2",GLOABL_COOKIE);
         Request request = new Request.Builder().url("http://pub.alimama.com/common/getUnionPubContextInfo.json").build();
         okHttpClient.newCall(request).enqueue(callback);
     }
@@ -56,13 +51,10 @@ public class TaoBaoHelper {
         return okHttpClient;
     }
 
+public static void loadCookie(BmobDataProvider.LoadCookieCallBack callBack){
+    BmobDataProvider.loadCookie(callBack);
+}
 
-    private static String getCookie(){
-        return cookie;
-    }
-    public static void setCookie(String val){
-        cookie=val;
-    }
 
     public static String getLoginUrl(){
         return "https://login.taobao.com/member/login.jhtml?style=mini&newMini2=true&css_style=alimama&from=alimama&redirectURL=http://pub.alimama.com/common/code/getAuctionCode.json?auctionid=556095016857&adzoneid=148716480&siteid=39748344&scenes=1&full_redirect=true&disableQuickLogin=true";

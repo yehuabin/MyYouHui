@@ -3,6 +3,7 @@ package com.yhb.myyouhui.utils;
 import android.util.Log;
 
 import com.yhb.myyouhui.callback.SearchCallback;
+import com.yhb.myyouhui.model.CookieModel;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
 
@@ -57,5 +58,29 @@ public class BmobDataProvider {
             }
         });
 
+    }
+
+    public static void loadCookie(final LoadCookieCallBack callBack){
+        BmobQuery<CookieModel> bmobQuery = new BmobQuery<CookieModel>();
+        bmobQuery.addWhereEqualTo("type", "token");
+        bmobQuery.setLimit(1);
+        bmobQuery.findObjects(new FindListener<CookieModel>() {
+            @Override
+            public void done(List<CookieModel> list, BmobException e) {
+                if (e == null) {
+                    TaoBaoHelper.GLOABL_COOKIE=list.get(0).getCookie();
+                    if (callBack != null) {
+                        callBack.execute(list.get(0));
+                    }
+                } else {
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+            }
+        });
+
+    }
+
+    public interface LoadCookieCallBack {
+        void execute(CookieModel cookieModel);
     }
 }
