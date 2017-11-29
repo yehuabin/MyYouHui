@@ -12,6 +12,25 @@ public class SearchModel {
     public static int JIAGE_JIANG=3;//价格降序
     public static int XIAOLIANG=9;//销量降序
     private int sortType;
+    private String searchType;
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    private String keyword;
     private String category;
 
     public String getCategory() {

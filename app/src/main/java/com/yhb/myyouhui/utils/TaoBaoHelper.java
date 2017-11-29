@@ -1,7 +1,17 @@
 package com.yhb.myyouhui.utils;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.yhb.myyouhui.callback.SearchCallback;
+import com.yhb.myyouhui.model.ProductListModel;
+import com.yhb.myyouhui.model.ProductModel;
+import com.yhb.myyouhui.model.SearchModel;
+import com.yhb.myyouhui.provider.BmobDataProvider;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -25,7 +35,33 @@ public class TaoBaoHelper {
         okHttpClient.newCall(request).enqueue(callback);
     }
 
+    public static void search(final SearchModel searchModel, final SearchCallback searchCallback) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder().url(UrlUtil.getSearchUrl(searchModel)).build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+
+                Gson gson = new Gson();
+                final List<ProductListModel.DataBean.PageListBean> datas = gson.fromJson(json, ProductListModel.class).getData().getPageList();
+                List<ProductModel> result=new ArrayList<ProductModel>();
+                if (datas==null||datas.size()==0){
+                     searchCallback.response(result);
+                    return;
+                }
+                for (int i=0;i<datas.size();i++){
+                    result.add(ModelUtil.getProductModel(datas.get(i),searchModel.getCategory(),searchModel.getSortType()));
+                }
+                searchCallback.response(result);
+            }
+        });
+    }
 
     public static void isLogin(Callback callback){
         OkHttpClient okHttpClient = getClient("cookie2",GLOABL_COOKIE);

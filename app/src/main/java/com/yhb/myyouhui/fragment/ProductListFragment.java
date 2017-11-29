@@ -19,7 +19,7 @@ import com.yhb.myyouhui.adapter.ProductListAdapter;
 import com.yhb.myyouhui.callback.SearchCallback;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
-import com.yhb.myyouhui.utils.BmobDataProvider;
+import com.yhb.myyouhui.provider.DataProvider;
 import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.utils.LineDecoration;
 
@@ -38,18 +38,24 @@ public class ProductListFragment extends Fragment {
     CheckBox ck_onlyTmall;
     private int lastVisibleItem = 0;
     SearchModel searchModel = new SearchModel();
-
+    String searchType;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
         Bundle bundle = getArguments();
-        String type = bundle.getString("type");
+         searchType = bundle.getString("type");
         int position = bundle.getInt("position");
-        if (type == "index") {
+        if (searchType.equals("index")) {
             searchModel.setCategory(CategoryUtil.getVal(String.valueOf(position)));
         }
+        else {
+            searchModel.setKeyword(bundle.getString("keyword"));
+        }
+        searchModel.setSearchType(searchType);
+
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
@@ -150,22 +156,29 @@ public class ProductListFragment extends Fragment {
 
     private void loadData() {
 
-        BmobDataProvider.search(searchModel, new SearchCallback() {
+        DataProvider.search(searchModel, new SearchCallback() {
             @Override
             public void response(final List<ProductModel> data) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (data.size() == 0) {
-                            adapter.noMore();
+                            if (adapter!=null) {
+                                adapter.noMore();
+                            }
                             return;
                         }
                         if (searchModel.getPage() == 0) {
                             adapter = new ProductListAdapter(inflater, data);
                             recyclerView.setAdapter(adapter);
+
                         } else {
                             adapter.addMore(data);
+                            if (data.size()<SearchModel.PAGE_SIZE){
+                                adapter.noMore();
+                            }
                         }
+
                     }
 
                 });

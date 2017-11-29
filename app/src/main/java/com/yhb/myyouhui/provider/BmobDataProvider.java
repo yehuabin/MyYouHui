@@ -1,4 +1,4 @@
-package com.yhb.myyouhui.utils;
+package com.yhb.myyouhui.provider;
 
 import android.util.Log;
 
@@ -6,6 +6,7 @@ import com.yhb.myyouhui.callback.SearchCallback;
 import com.yhb.myyouhui.model.CookieModel;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
+import com.yhb.myyouhui.utils.TaoBaoHelper;
 
 import java.util.ArrayList;
 import java.util.List;

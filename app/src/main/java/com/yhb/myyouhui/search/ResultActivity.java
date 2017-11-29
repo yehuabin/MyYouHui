@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.yhb.myyouhui.BaseActivity;
@@ -14,7 +13,6 @@ import com.yhb.myyouhui.fragment.ProductListFragment;
 
 public class ResultActivity extends BaseActivity {
 
-    RecyclerView recyclerView;
     ViewPager viewPager;
 
     @Override
@@ -49,6 +47,7 @@ public class ResultActivity extends BaseActivity {
             public Fragment getItem(int position) {
                 Bundle bundle = new Bundle();
                 bundle.putString("keyword", keyword);
+                bundle.putString("type", "search");
                 productListFragment.setArguments(bundle);
                 return productListFragment;
             }

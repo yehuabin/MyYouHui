@@ -172,16 +172,17 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         isLoadOver = true;
     }
 
-    public void setEmpty(){
+    public void setEmpty() {
 
-            mFooterLayout.removeAllViews();
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    150);
+        mFooterLayout.removeAllViews();
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
 
-            mFooterLayout.addView(inflater.inflate(R.layout.foot_empty, null), params);
-            isLoadOver = true;
+        mFooterLayout.addView(inflater.inflate(R.layout.foot_empty, null), params);
+        isLoadOver = true;
 
     }
+
     public boolean isLoadOver() {
         return isLoadOver;
     }
