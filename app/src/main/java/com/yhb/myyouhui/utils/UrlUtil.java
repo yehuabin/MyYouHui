@@ -12,7 +12,7 @@ public class UrlUtil {
 
     public static String getSearchUrl(SearchModel searchModel) {
         String showTag = "";
-        String sortType = "";
+        String sortType = String.valueOf(searchModel.getSortType());
         if (searchModel.isOnlyQuan() && searchModel.isOnlyTmall()) {
             showTag = "b2c,dpyhq";
         } else if (searchModel.isOnlyQuan()) {
@@ -21,16 +21,11 @@ public class UrlUtil {
             showTag = "b2c";
         }
 
-        if (searchModel.getSortType() == 2) {
-            sortType = "9";
-        } else if (searchModel.getSortType() == 1) {
-            sortType = "1";
+      if (searchModel.getSortType() == 3) {
+            sortType = "3&startBiz30day=100";
         }
-    else if (searchModel.getSortType() == 3) {
-        sortType = "3&startBiz30day=100";
-    }
         String url = String.format("http://pub.alimama.com/items/search.json?toPage=%s&perPageSize=%s&q=%s&shopTag=%s&sortType=%s&queryType=0",
-                searchModel.getPage()+1, SearchModel.PAGE_SIZE, searchModel.getKeyword(), showTag, sortType);
+                searchModel.getPage() + 1, SearchModel.PAGE_SIZE, searchModel.getKeyword(), showTag, sortType);
         Log.d("bmob", "getSearchUrl: " + url);
         return url;
     }

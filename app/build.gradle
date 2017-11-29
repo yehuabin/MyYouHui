@@ -38,5 +38,6 @@ dependencies {
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'com.pgyersdk:sdk:2.8.0'
     testCompile 'junit:junit:4.12'
+
     compile files('libs/Baidu_Mtj_3.8.1.1.jar')
 }

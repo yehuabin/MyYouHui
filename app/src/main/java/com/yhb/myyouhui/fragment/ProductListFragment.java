@@ -15,7 +15,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.yhb.myyouhui.R;
-import com.yhb.myyouhui.adapter.ProductListAdapter;
+import com.yhb.myyouhui.adapter.MultiRefreshAdapter;
+import com.yhb.myyouhui.baseadapter.interfaces.OnLoadMoreListener;
 import com.yhb.myyouhui.callback.SearchCallback;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
@@ -32,54 +33,61 @@ import java.util.List;
 public class ProductListFragment extends Fragment {
     RecyclerView recyclerView;
     LayoutInflater inflater;
-    ProductListAdapter adapter;
+    MultiRefreshAdapter mAdapter;
     TabLayout tl_sortType;
     CheckBox ck_onlyQuan;
     CheckBox ck_onlyTmall;
-    private int lastVisibleItem = 0;
     SearchModel searchModel = new SearchModel();
     String searchType;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
         Bundle bundle = getArguments();
-         searchType = bundle.getString("type");
+        searchType = bundle.getString("type");
         int position = bundle.getInt("position");
         if (searchType.equals("index")) {
             searchModel.setCategory(CategoryUtil.getVal(String.valueOf(position)));
-        }
-        else {
+        } else {
             searchModel.setKeyword(bundle.getString("keyword"));
         }
         searchModel.setSearchType(searchType);
 
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recylerView);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(inflater.getContext());
-        recyclerView.addItemDecoration(new LineDecoration(inflater.getContext(), LineDecoration.VERTICAL_LIST));
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        //初始化adapter
+        mAdapter = new MultiRefreshAdapter(inflater.getContext(), null, true);
+        //初始化EmptyView
+        View emptyView = inflater.inflate(R.layout.empty_layout, (ViewGroup) recyclerView.getParent(), false);
+        mAdapter.setEmptyView(emptyView);
+
+        //初始化 开始加载更多的loading View
+        mAdapter.setLoadingView(R.layout.load_loading_layout);
+        //加载失败，更新footer view提示
+        mAdapter.setLoadFailedView(R.layout.load_failed_layout);
+        //加载完成，更新footer view提示
+        mAdapter.setLoadEndView(R.layout.load_end_layout);
+
+        //设置加载更多触发的事件监听
+        mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount() && !adapter.isLoadOver()) {
-                    searchModel.setPage(searchModel.getPage() + 1);
+            public void onLoadMore(boolean isReload) {
+                searchModel.setPage(searchModel.getPage() + 1);
 
 
-                    loadData();
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                loadData();
             }
         });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(inflater.getContext());
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new LineDecoration(inflater.getContext(), LineDecoration.VERTICAL_LIST));
+
+        recyclerView.setAdapter(mAdapter);
         loadData();
         TextView tv_onlyQuan = (TextView) view.findViewById(R.id.tv_onlyQuan);
         Drawable img = getResources().getDrawable(R.drawable.quan);
@@ -144,12 +152,12 @@ public class ProductListFragment extends Fragment {
 
     private void search() {
 
-        adapter.setEmpty();
+       mAdapter.reset();
         searchModel.setSortType(sortType);
         searchModel.setOnlyQuan(ck_onlyQuan.isChecked());
         searchModel.setOnlyTmall(ck_onlyTmall.isChecked());
         searchModel.setPage(0);
-        adapter.clear();
+
         loadData();
 
     }
@@ -162,23 +170,18 @@ public class ProductListFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (data.size() == 0) {
-                            if (adapter!=null) {
-                                adapter.noMore();
-                            }
-                            return;
-                        }
+
                         if (searchModel.getPage() == 0) {
-                            adapter = new ProductListAdapter(inflater, data);
-                            recyclerView.setAdapter(adapter);
-
-                        } else {
-                            adapter.addMore(data);
-                            if (data.size()<SearchModel.PAGE_SIZE){
-                                adapter.noMore();
+                            mAdapter.setNewData(data);
+                        }
+                        else {
+                            if (data==null||data.size()==0){
+                                mAdapter.loadEnd();
+                            }
+                            else {
+                                mAdapter.setLoadMoreData(data);
                             }
                         }
-
                     }
 
                 });
