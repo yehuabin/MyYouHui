@@ -2,6 +2,7 @@ package com.yhb.myyouhui.fragment;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -40,7 +41,7 @@ public class ProductListFragment extends Fragment {
     CheckBox ck_onlyTmall;
     SearchModel searchModel = new SearchModel();
     String searchType;
-
+    Handler handler = new Handler();
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -188,17 +189,17 @@ public class ProductListFragment extends Fragment {
 
         DataProvider.search(searchModel, new SearchCallback() {
             @Override
-            public void response(final List<ProductModel> data,final boolean isOK) {
-                getActivity().runOnUiThread(new Runnable() {
+            public void response(final List<ProductModel> data, final boolean isOK) {
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
-                if (searchModel.getPage() == 0) {
+                        if (searchModel.getPage() == 0) {
                             mAdapter.setNewData(data);
                         } else {
                             if (data == null || data.size() == 0) {
                                 mAdapter.loadEnd();
                             } else {
-                                if (!isOK){
+                                if (!isOK) {
                                     mAdapter.loadFailed();
                                     return;
                                 }
@@ -207,11 +208,12 @@ public class ProductListFragment extends Fragment {
                             }
                         }
 
-                        searchModel.setPage(searchModel.getPage() +1);
+                        searchModel.setPage(searchModel.getPage() + 1);
                     }
 
                 });
             }
         });
+
     }
 }

@@ -42,6 +42,7 @@ public class DetailActivity extends BaseActivity {
     List<String> images;
     SmartScrollView scrollView;
     LinearLayout ll_content;
+     boolean isWifi;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_detail;
@@ -52,6 +53,9 @@ public class DetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         scrollView=mViewHolder.get(R.id.scrollView);
         ll_content=mViewHolder.get(R.id.ll_content);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        isWifi = info.getType() == ConnectivityManager.TYPE_WIFI;
         Intent intent = getIntent();
         String realPrice = intent.getStringExtra("realPrice");//券后价
         String title = intent.getStringExtra("title");
@@ -65,7 +69,10 @@ public class DetailActivity extends BaseActivity {
         float couponStartFee = intent.getFloatExtra("couponStartFee", 0);//满多少使用
         String userType = intent.getStringExtra("userType");//是否天猫
         String commFee = intent.getStringExtra("commFee");//可领红包
-
+if (isWifi){
+    mViewHolder.get(R.id.iv_click).setVisibility(View.GONE);
+    mViewHolder.get(R.id.tv_content).setVisibility(View.GONE);
+}
         String detailUrl = "https://hws.m.taobao.com/cache/mtop.wdetail.getItemDescx/4.1/?data={item_num_id:" + auctionId + "}&type=json&dataType=json";
         HttpUtil.Request(detailUrl, new Callback() {
             @Override
@@ -80,6 +87,10 @@ public class DetailActivity extends BaseActivity {
                 ProductDetailModel productDetailModel = gson.fromJson(json, ProductDetailModel.class);
                 if (productDetailModel.getRet().size() > 0 && productDetailModel.getRet().get(0).indexOf("SUCCESS") > -1) {
                     images = productDetailModel.getData().getImages();
+                    if (isWifi) {
+
+                        loadMore();
+                    }
                 } else {
                     toastLong("宝贝详情加载失败");
                 }
@@ -174,14 +185,8 @@ public class DetailActivity extends BaseActivity {
         } else {
             tv_zkPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        boolean isWifi = info.getType() == ConnectivityManager.TYPE_WIFI;
-        if (isWifi) {
-loadMore();
-        } else {
 
-        }
+
        final ImageView iv_backtop=mViewHolder.get(R.id.iv_backtop);
         iv_backtop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,33 +220,42 @@ loadMore();
     }
 
     private void loadMore() {
-        //  rv_detail.setAdapter(new DetailAdapter(getLayoutInflater(), images));
-        for (int i = 0; i < images.size(); i++) {
-            final ResizableImageView imageView = new ResizableImageView(getBaseContext());
-
-
-            Glide.with(DetailActivity.this).asBitmap().load(images.get(i))
-
-                    .transition(withCrossFade(500))
-                    .into(imageView);
-           ll_content.addView(imageView);
+        if (images==null||images.size()==0){
+            return;
         }
+       runOnUiThread(new Runnable() {
+           @Override
+           public void run() {
+               for (int i = 0; i < images.size(); i++) {
+                   final ResizableImageView imageView = new ResizableImageView(getBaseContext());
 
 
-        loadDetail = true;
-        mViewHolder.get(R.id.iv_click).setVisibility(View.GONE);
-        mViewHolder.get(R.id.tv_content).setVisibility(View.GONE);
+                   Glide.with(DetailActivity.this).asBitmap().load(images.get(i))
 
-        new Handler().postDelayed(new Runnable(){
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.smoothScrollBy(0,1450);
-                    }
-                });
-            }
-        }, 800);
+                           .transition(withCrossFade(500))
+                           .into(imageView);
+                   ll_content.addView(imageView);
+               }
+
+
+               loadDetail = true;
+               mViewHolder.get(R.id.iv_click).setVisibility(View.GONE);
+               mViewHolder.get(R.id.tv_content).setVisibility(View.GONE);
+
+               if (!isWifi){
+                   new Handler().postDelayed(new Runnable(){
+                       public void run() {
+                           runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   scrollView.smoothScrollBy(0,1450);
+                               }
+                           });
+                       }
+                   }, 800);
+               }
+           }
+       });
     }
 
     private void share(String auctionId, final MyCallBack callBack) {
