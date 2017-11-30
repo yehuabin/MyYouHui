@@ -8,21 +8,23 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.yhb.myyouhui.model.CouponModel;
 import com.yhb.myyouhui.model.ProductDetailModel;
+import com.yhb.myyouhui.provider.BmobDataProvider;
 import com.yhb.myyouhui.utils.HttpUtil;
 import com.yhb.myyouhui.utils.TaoBaoHelper;
 import com.yhb.myyouhui.utils.TextUtil;
 import com.yhb.myyouhui.views.ResizableImageView;
+import com.yhb.myyouhui.views.SmartScrollView;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +40,8 @@ public class DetailActivity extends BaseActivity {
     //RecyclerView rv_detail;
     boolean loadDetail = false;
     List<String> images;
-ScrollView scrollView;
+    SmartScrollView scrollView;
+    LinearLayout ll_content;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_detail;
@@ -48,6 +51,7 @@ ScrollView scrollView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         scrollView=mViewHolder.get(R.id.scrollView);
+        ll_content=mViewHolder.get(R.id.ll_content);
         Intent intent = getIntent();
         String realPrice = intent.getStringExtra("realPrice");//券后价
         String title = intent.getStringExtra("title");
@@ -147,23 +151,7 @@ ScrollView scrollView;
                         if (loadDetail) {
                             return;
                         }
-                        //  rv_detail.setAdapter(new DetailAdapter(getLayoutInflater(), images));
-
-                        for (int i = 0; i < images.size(); i++) {
-                            final ResizableImageView imageView = new ResizableImageView(getBaseContext());
-
-
-                            Glide.with(DetailActivity.this).asBitmap().load(images.get(i))
-
-                                    .transition(withCrossFade(500))
-                                    .into(imageView);
-                            ((LinearLayout) v).addView(imageView);
-                        }
-
-
-                        loadDetail = true;
-                        mViewHolder.get(R.id.iv_click).setVisibility(View.GONE);
-                        mViewHolder.get(R.id.tv_content).setVisibility(View.GONE);
+                        loadMore();
                         break;
                     default:
                         break;
@@ -190,16 +178,70 @@ ScrollView scrollView;
         NetworkInfo info = cm.getActiveNetworkInfo();
         boolean isWifi = info.getType() == ConnectivityManager.TYPE_WIFI;
         if (isWifi) {
-
+loadMore();
         } else {
 
         }
-        mViewHolder.get(R.id.iv_backtop).setOnClickListener(new View.OnClickListener() {
+       final ImageView iv_backtop=mViewHolder.get(R.id.iv_backtop);
+        iv_backtop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scrollView.smoothScrollTo(0,0);
             }
         });
+
+         scrollView.setScanScrollChangedListener(new SmartScrollView.ISmartScrollChangedListener() {
+             @Override
+             public void onScrolledToBottom() {
+
+             }
+
+             @Override
+             public void onScrolledToTop() {
+                 iv_backtop.setVisibility(View.GONE);
+             }
+
+             @Override
+             public void onScrollChanged(int l, int t, int oldl, int oldt) {
+
+                 if (t>300) {
+                     iv_backtop.setVisibility(View.VISIBLE);
+                 }
+                 else {
+                     iv_backtop.setVisibility(View.GONE);
+                 }
+             }
+         });
+    }
+
+    private void loadMore() {
+        //  rv_detail.setAdapter(new DetailAdapter(getLayoutInflater(), images));
+        for (int i = 0; i < images.size(); i++) {
+            final ResizableImageView imageView = new ResizableImageView(getBaseContext());
+
+
+            Glide.with(DetailActivity.this).asBitmap().load(images.get(i))
+
+                    .transition(withCrossFade(500))
+                    .into(imageView);
+           ll_content.addView(imageView);
+        }
+
+
+        loadDetail = true;
+        mViewHolder.get(R.id.iv_click).setVisibility(View.GONE);
+        mViewHolder.get(R.id.tv_content).setVisibility(View.GONE);
+
+        new Handler().postDelayed(new Runnable(){
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollBy(0,1450);
+                    }
+                });
+            }
+        }, 800);
     }
 
     private void share(String auctionId, final MyCallBack callBack) {
@@ -220,6 +262,7 @@ ScrollView scrollView;
                     }
                 } else {
                     toastLong("复制失败，请稍后重试");
+                    BmobDataProvider.loadCookie(null);
                 }
 
             }
