@@ -17,12 +17,14 @@
             android:layout_height="48dp"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="MY优惠"
-    android:textColor="@android:color/white"
-    android:textSize="14sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MY优惠"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,6 +72,7 @@
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="#212121" />
     </android.support.design.widget.AppBarLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -79,18 +82,19 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-<include android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    layout="@layout/product_list"></include>
+        <include
+            layout="@layout/product_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></include>
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        app:layout_behavior="@string/scale_down_show_behavior"
-        android:visibility="invisible"
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/search"/>
+
+    <ImageView
+        android:id="@+id/iv_backtop"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="15dp"
+        android:alpha="0.9"
+        android:src="@drawable/backtop" />
 
 </android.support.design.widget.CoordinatorLayout>

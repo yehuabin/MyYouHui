@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yhb.myyouhui.R;
@@ -42,8 +43,8 @@ public class ProductListFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.product_fragment, container, false);
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
         Bundle bundle = getArguments();
         searchType = bundle.getString("type");
@@ -82,12 +83,38 @@ public class ProductListFragment extends Fragment {
             }
         });
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(inflater.getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(inflater.getContext());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new LineDecoration(inflater.getContext(), LineDecoration.VERTICAL_LIST));
 
         recyclerView.setAdapter(mAdapter);
+
+        final ImageView fab = (ImageView) getActivity().findViewById(R.id.iv_backtop);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int firstVisibleItem = 0;
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+
+                if (firstVisibleItem > 1) {
+                    fab.setVisibility(View.VISIBLE);
+                    //Show FAB
+                } else {
+                    //Hide FAB
+                    fab.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecyclerView r = (RecyclerView) getActivity().findViewById(R.id.recylerView);
+                r.smoothScrollToPosition(0);
+            }
+        });
         loadData();
         TextView tv_onlyQuan = (TextView) view.findViewById(R.id.tv_onlyQuan);
         Drawable img = getResources().getDrawable(R.drawable.quan);
@@ -152,7 +179,7 @@ public class ProductListFragment extends Fragment {
 
     private void search() {
 
-       mAdapter.reset();
+        mAdapter.reset();
         searchModel.setSortType(sortType);
         searchModel.setOnlyQuan(ck_onlyQuan.isChecked());
         searchModel.setOnlyTmall(ck_onlyTmall.isChecked());
@@ -173,12 +200,10 @@ public class ProductListFragment extends Fragment {
 
                         if (searchModel.getPage() == 0) {
                             mAdapter.setNewData(data);
-                        }
-                        else {
-                            if (data==null||data.size()==0){
+                        } else {
+                            if (data == null || data.size() == 0) {
                                 mAdapter.loadEnd();
-                            }
-                            else {
+                            } else {
                                 mAdapter.setLoadMoreData(data);
                             }
                         }

@@ -109,6 +109,8 @@ public class MainActivity extends BaseActivity {
         }
         tab_category.setTabMode(TabLayout.MODE_SCROLLABLE);
         tab_category.setupWithViewPager(vp_list);
+
+
     }
 
 

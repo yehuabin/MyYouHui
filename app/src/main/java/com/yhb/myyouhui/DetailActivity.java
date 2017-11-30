@@ -8,12 +8,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,10 +35,10 @@ import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.wi
 
 public class DetailActivity extends BaseActivity {
 
-    RecyclerView rv_detail;
+    //RecyclerView rv_detail;
     boolean loadDetail = false;
     List<String> images;
-
+ScrollView scrollView;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_detail;
@@ -48,6 +47,7 @@ public class DetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        scrollView=mViewHolder.get(R.id.scrollView);
         Intent intent = getIntent();
         String realPrice = intent.getStringExtra("realPrice");//券后价
         String title = intent.getStringExtra("title");
@@ -86,9 +86,9 @@ public class DetailActivity extends BaseActivity {
         ImageView iv_tmall = mViewHolder.get(R.id.iv_tmall);
         TextView tv_zkPrice = mViewHolder.get(R.id.tv_zkPrice);
 
-        rv_detail = mViewHolder.get(R.id.rv_detail);
-        rv_detail.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-        rv_detail.setHasFixedSize(true);
+//        rv_detail = mViewHolder.get(rv_detail);
+//        rv_detail.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+//        rv_detail.setHasFixedSize(true);
 
 
         tv_zkPrice.setText("现价￥" + zkPrice);
@@ -194,6 +194,12 @@ public class DetailActivity extends BaseActivity {
         } else {
 
         }
+        mViewHolder.get(R.id.iv_backtop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollView.smoothScrollTo(0,0);
+            }
+        });
     }
 
     private void share(String auctionId, final MyCallBack callBack) {
