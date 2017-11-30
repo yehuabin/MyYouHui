@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface SearchCallback {
-    void response(List<ProductModel> data);
+    void response(List<ProductModel> data,boolean isOK);
 }

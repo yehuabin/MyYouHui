@@ -391,6 +391,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         isReset = true;
         isAutoLoadMore = true;
         mDatas.clear();
+        notifyDataSetChanged();
     }
 
     /**

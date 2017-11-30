@@ -2,6 +2,7 @@ package com.yhb.myyouhui.utils;
 
 import com.google.gson.Gson;
 import com.yhb.myyouhui.callback.SearchCallback;
+import com.yhb.myyouhui.model.CookieModel;
 import com.yhb.myyouhui.model.ProductListModel;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
@@ -25,10 +26,10 @@ import okhttp3.Response;
 public class TaoBaoHelper {
     private static final String TAG = "TaoBaoHelper";
 
-    public static  String GLOABL_COOKIE = "";
+    public static CookieModel GLOABL_COOKIE ;
     //private static  String searchCookie = "frKiEpBaJFECAT2kgLpjUqMb";
     public static void generateCoupon(String auctionId,Callback callback){
-        OkHttpClient okHttpClient = getClient("cookie2",GLOABL_COOKIE);
+        OkHttpClient okHttpClient = getClient("cookie2",getCookie());
 
         Request request = new Request.Builder().url("http://pub.alimama.com/common/code/getAuctionCode.json?auctionid="+auctionId+"&adzoneid=148716480&siteid=39748344&scenes=1").build();
 
@@ -46,27 +47,40 @@ public class TaoBaoHelper {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
+              try{
+                  String json = response.body().string();
 
-                Gson gson = new Gson();
-                final List<ProductListModel.DataBean.PageListBean> datas = gson.fromJson(json, ProductListModel.class).getData().getPageList();
-                List<ProductModel> result=new ArrayList<ProductModel>();
-                if (datas==null||datas.size()==0){
-                     searchCallback.response(result);
-                    return;
-                }
-                for (int i=0;i<datas.size();i++){
-                    result.add(ModelUtil.getProductModel(datas.get(i),searchModel.getCategory(),searchModel.getSortType()));
-                }
-                searchCallback.response(result);
+                  Gson gson = new Gson();
+                  final List<ProductListModel.DataBean.PageListBean> datas = gson.fromJson(json, ProductListModel.class).getData().getPageList();
+                  List<ProductModel> result=new ArrayList<ProductModel>();
+                  if (datas==null||datas.size()==0){
+                      searchCallback.response(result,true);
+                      return;
+                  }
+                  for (int i=0;i<datas.size();i++){
+                      result.add(ModelUtil.getProductModel(datas.get(i),searchModel.getCategory(),searchModel.getSortType()));
+                  }
+                  searchCallback.response(result,true);
+              }
+              catch (Exception e){
+                  searchCallback.response(null,false);
+              }
+
             }
         });
     }
 
     public static void isLogin(Callback callback){
-        OkHttpClient okHttpClient = getClient("cookie2",GLOABL_COOKIE);
+        OkHttpClient okHttpClient = getClient("cookie2",getCookie());
         Request request = new Request.Builder().url("http://pub.alimama.com/common/getUnionPubContextInfo.json").build();
         okHttpClient.newCall(request).enqueue(callback);
+    }
+
+    public static String getCookie(){
+        if (GLOABL_COOKIE==null){
+            return "";
+        }
+        return GLOABL_COOKIE.getCookie();
     }
 
     private static OkHttpClient getClient(final String cookieKey, final String cookieVal){

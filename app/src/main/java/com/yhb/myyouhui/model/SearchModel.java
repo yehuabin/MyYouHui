@@ -1,10 +1,14 @@
 package com.yhb.myyouhui.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by smk on 2017/11/27.
  */
 
 public class SearchModel {
+    public static List<HotKeyModel> HOTKEY_LIST=new ArrayList<>();
     public static int PAGE_SIZE=12;
     public static int ZONGHE=0;//综合排序
     public static int FANXIAN=1;//返现比率排序

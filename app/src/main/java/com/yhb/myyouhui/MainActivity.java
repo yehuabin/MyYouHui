@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.baidu.mobstat.StatService;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.yhb.myyouhui.fragment.ProductListFragment;
+import com.yhb.myyouhui.provider.BmobDataProvider;
 import com.yhb.myyouhui.search.SearchActivity;
 import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.utils.TaoBaoHelper;
@@ -86,6 +87,7 @@ public class MainActivity extends BaseActivity {
             public int getCount() {
                 return count;
             }
+
             @Override
             public Fragment instantiateItem(ViewGroup container, int position) {
                 Fragment fragment = (Fragment) super.instantiateItem(container,
@@ -110,6 +112,7 @@ public class MainActivity extends BaseActivity {
         tab_category.setTabMode(TabLayout.MODE_SCROLLABLE);
         tab_category.setupWithViewPager(vp_list);
 
+        BmobDataProvider.setHotKey();
 
     }
 

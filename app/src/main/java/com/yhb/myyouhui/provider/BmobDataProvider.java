@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.yhb.myyouhui.callback.SearchCallback;
 import com.yhb.myyouhui.model.CookieModel;
+import com.yhb.myyouhui.model.HotKeyModel;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
 import com.yhb.myyouhui.utils.TaoBaoHelper;
@@ -50,18 +51,33 @@ public class BmobDataProvider {
         query.findObjects(new FindListener<ProductModel>() {
             @Override
             public void done(List<ProductModel> object, BmobException e) {
-                if (e == null) {
-                    searchCallback.response(object);
 
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
+                searchCallback.response(object, e == null);
+
+
             }
         });
 
     }
 
-    public static void loadCookie(final LoadCookieCallBack callBack){
+    public static void setHotKey() {
+        BmobQuery<HotKeyModel> query = new BmobQuery<HotKeyModel>();
+        query.order("-createdAt");
+        //执行查询方法
+        query.findObjects(new FindListener<HotKeyModel>() {
+            @Override
+            public void done(List<HotKeyModel> object, BmobException e) {
+
+                if (e == null) {
+                    SearchModel.HOTKEY_LIST = object;
+                }
+
+
+            }
+        });
+    }
+
+    public static void loadCookie(final LoadCookieCallBack callBack) {
         BmobQuery<CookieModel> bmobQuery = new BmobQuery<CookieModel>();
         bmobQuery.addWhereEqualTo("type", "token");
         bmobQuery.setLimit(1);
@@ -69,7 +85,7 @@ public class BmobDataProvider {
             @Override
             public void done(List<CookieModel> list, BmobException e) {
                 if (e == null) {
-                    TaoBaoHelper.GLOABL_COOKIE=list.get(0).getCookie();
+                    TaoBaoHelper.GLOABL_COOKIE = list.get(0);
                     if (callBack != null) {
                         callBack.execute(list.get(0));
                     }

@@ -76,10 +76,7 @@ public class ProductListFragment extends Fragment {
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(boolean isReload) {
-                searchModel.setPage(searchModel.getPage() + 1);
-
-
-                loadData();
+                   loadData();
             }
         });
 
@@ -108,6 +105,7 @@ public class ProductListFragment extends Fragment {
                 }
             }
         });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +113,7 @@ public class ProductListFragment extends Fragment {
                 r.smoothScrollToPosition(0);
             }
         });
-        loadData();
+
         TextView tv_onlyQuan = (TextView) view.findViewById(R.id.tv_onlyQuan);
         Drawable img = getResources().getDrawable(R.drawable.quan);
         img.setBounds(0, 0, 50, 50);
@@ -178,35 +176,38 @@ public class ProductListFragment extends Fragment {
     }
 
     private void search() {
-
-        mAdapter.reset();
         searchModel.setSortType(sortType);
         searchModel.setOnlyQuan(ck_onlyQuan.isChecked());
         searchModel.setOnlyTmall(ck_onlyTmall.isChecked());
         searchModel.setPage(0);
-
+        mAdapter.reset();
         loadData();
-
     }
 
     private void loadData() {
 
         DataProvider.search(searchModel, new SearchCallback() {
             @Override
-            public void response(final List<ProductModel> data) {
+            public void response(final List<ProductModel> data,final boolean isOK) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        if (searchModel.getPage() == 0) {
+                if (searchModel.getPage() == 0) {
                             mAdapter.setNewData(data);
                         } else {
                             if (data == null || data.size() == 0) {
                                 mAdapter.loadEnd();
                             } else {
+                                if (!isOK){
+                                    mAdapter.loadFailed();
+                                    return;
+                                }
+
                                 mAdapter.setLoadMoreData(data);
                             }
                         }
+
+                        searchModel.setPage(searchModel.getPage() +1);
                     }
 
                 });

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -20,7 +21,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.yhb.myyouhui.BaseActivity;
 import com.yhb.myyouhui.R;
+import com.yhb.myyouhui.model.HotKeyModel;
+import com.yhb.myyouhui.model.SearchModel;
 import com.yhb.myyouhui.utils.HttpUtil;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +51,7 @@ public class SearchActivity extends BaseActivity {
 
     private SQLiteDatabase db;
     private BaseAdapter adapter;
-
+private TagFlowLayout mFlowLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +103,12 @@ public class SearchActivity extends BaseActivity {
                     return;
                 }
                 hideClear();
-               showSuggest();
+               try{
+                   showSuggest();
+               }
+               catch (Exception e){
+
+               }
             }
         });
 
@@ -129,6 +140,28 @@ public class SearchActivity extends BaseActivity {
                 }
             }
         }, R.id.iv_back, R.id.iv_search);
+      final LayoutInflater  mInflater = LayoutInflater.from(this);
+        mFlowLayout=mViewHolder.get(R.id.id_flowlayout);
+        mFlowLayout.setAdapter(new TagAdapter<HotKeyModel>(SearchModel.HOTKEY_LIST)
+        {
+            @Override
+            public View getView(FlowLayout parent, int position, HotKeyModel s)
+            {
+                TextView tv = (TextView) mInflater.inflate(R.layout.hot_item,
+                        mFlowLayout, false);
+                tv.setText(s.getKeyword());
+                return tv;
+            }
+        });
+
+        mFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+            @Override
+            public boolean onTagClick(View view, int position, FlowLayout parent) {
+                et_search.setText(SearchModel.HOTKEY_LIST.get(position).getKeyword());
+                search();
+                return true;
+            }
+        });
     }
 
     private void showSuggest() {

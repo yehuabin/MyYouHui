@@ -46,6 +46,30 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="热门搜索"/>
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/id_flowlayout"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+        </com.zhy.view.flowlayout.TagFlowLayout>
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="left|center_vertical"
+            android:text="搜索历史" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -64,12 +88,7 @@
 
                 >
 
-                <TextView
-                    android:id="@+id/tv_tip"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="left|center_vertical"
-                    android:text="搜索历史" />
+
 
                 <View
                     android:layout_width="match_parent"
