@@ -47,6 +47,7 @@ public class BmobDataProvider {
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(SearchModel.PAGE_SIZE);
         query.setSkip(searchModel.getPage() * SearchModel.PAGE_SIZE);
+        query.order("-createdAt");
         //执行查询方法
         query.findObjects(new FindListener<ProductModel>() {
             @Override

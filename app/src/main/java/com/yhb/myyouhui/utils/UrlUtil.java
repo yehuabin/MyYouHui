@@ -21,8 +21,8 @@ public class UrlUtil {
             showTag = "b2c";
         }
 
-      if (searchModel.getSortType() == 3) {
-            sortType = "3&startBiz30day=100";
+      if (searchModel.getSortType() == 3||searchModel.getSortType() == 1) {
+            sortType = searchModel.getSortType()+"&startBiz30day=100";
         }
         String url = String.format("http://pub.alimama.com/items/search.json?toPage=%s&perPageSize=%s&q=%s&shopTag=%s&sortType=%s&queryType=0",
                 searchModel.getPage() + 1, SearchModel.PAGE_SIZE, searchModel.getKeyword(), showTag, sortType);

@@ -14,17 +14,22 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yhb.myyouhui.R;
 import com.yhb.myyouhui.adapter.MultiRefreshAdapter;
 import com.yhb.myyouhui.baseadapter.interfaces.OnLoadMoreListener;
 import com.yhb.myyouhui.callback.SearchCallback;
+import com.yhb.myyouhui.callback.TabChangedEvent;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
 import com.yhb.myyouhui.provider.DataProvider;
 import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.utils.LineDecoration;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -42,16 +47,23 @@ public class ProductListFragment extends Fragment {
     SearchModel searchModel = new SearchModel();
     String searchType;
     Handler handler = new Handler();
+    LinearLayout ll_tmall;
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         final View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
+        tl_sortType = (TabLayout) view.findViewById(R.id.tl_sortType);
+        ck_onlyQuan = (CheckBox) view.findViewById(R.id.ck_onlyQuan);
+        ck_onlyTmall = (CheckBox) view.findViewById(R.id.ck_onlyTmall);
+        ll_tmall= (LinearLayout) view.findViewById(R.id.ll_tmall);
         Bundle bundle = getArguments();
         searchType = bundle.getString("type");
         int position = bundle.getInt("position");
         if (searchType.equals("index")) {
             searchModel.setCategory(CategoryUtil.getVal(String.valueOf(position)));
+
         } else {
             searchModel.setKeyword(bundle.getString("keyword"));
         }
@@ -125,9 +137,7 @@ public class ProductListFragment extends Fragment {
         img.setBounds(0, 0, 40, 40);
         tv_onlyTmall.setCompoundDrawables(img, null, null, null);
 
-        tl_sortType = (TabLayout) view.findViewById(R.id.tl_sortType);
-        ck_onlyQuan = (CheckBox) view.findViewById(R.id.ck_onlyQuan);
-        ck_onlyTmall = (CheckBox) view.findViewById(R.id.ck_onlyTmall);
+
         ck_onlyQuan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -216,4 +226,23 @@ public class ProductListFragment extends Fragment {
         });
 
     }
+
+    //首页tab点击刷新当前fragment
+    @Subscribe
+    public void onEvent(TabChangedEvent event) {
+        if (event.getTabPosition()==0||event.getTabPosition()==2) {
+           ll_tmall.setVisibility(View.VISIBLE);
+        }
+        else {
+            ll_tmall.setVisibility(View.INVISIBLE);
+        }
+
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        EventBus.getDefault().unregister(this);
+    }
+
 }

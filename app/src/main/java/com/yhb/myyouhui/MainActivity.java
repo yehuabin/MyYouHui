@@ -9,19 +9,17 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.baidu.mobstat.StatService;
 import com.pgyersdk.update.PgyUpdateManager;
+import com.yhb.myyouhui.callback.TabChangedEvent;
 import com.yhb.myyouhui.fragment.ProductListFragment;
-import com.yhb.myyouhui.provider.BmobDataProvider;
 import com.yhb.myyouhui.search.SearchActivity;
 import com.yhb.myyouhui.utils.CategoryUtil;
-import com.yhb.myyouhui.utils.TaoBaoHelper;
 import com.yhb.myyouhui.views.NoScrollViewPager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.bmob.v3.Bmob;
 
 public class MainActivity extends BaseActivity {
 
@@ -40,12 +38,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Bmob.initialize(this, "9be40913fa1a1f940dc81aafa1139757");
         PgyUpdateManager.setIsForced(true); //设置是否强制更新。true为强制更新；false为不强制更新（默认值）。
         PgyUpdateManager.register(MainActivity.this);
-        StatService.start(this);
-        TaoBaoHelper.loadCookie(null);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -112,7 +107,22 @@ public class MainActivity extends BaseActivity {
         tab_category.setTabMode(TabLayout.MODE_SCROLLABLE);
         tab_category.setupWithViewPager(vp_list);
 
-        BmobDataProvider.setHotKey();
+tab_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        EventBus.getDefault().post(new TabChangedEvent(tab_category.getSelectedTabPosition()));
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
+});
 
     }
 
@@ -122,5 +132,6 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
 }

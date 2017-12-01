@@ -3,11 +3,11 @@
     package="com.yhb.myyouhui">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取网络状态 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络通信-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />  <!-- 获取设备信息 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取MAC地址-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 读写sdcard，storage等等 -->
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络通信 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 获取设备信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 获取MAC地址 -->
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".utils.PgyApplication"
@@ -18,22 +18,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".search.SearchActivity" />
+        <activity android:name=".search.ResultActivity" />
+
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="4631550706b46caf5e29695a73fa3a7e"></meta-data>
+        <meta-data
+            android:name="BaiduMobAd_STAT_ID"
+            android:value="110a619720" />
+
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity" />
-        <activity android:name=".search.SearchActivity" />
-        <activity android:name=".search.ResultActivity"></activity>
-        <meta-data
-            android:name="PGYER_APPID"
-            android:value="4631550706b46caf5e29695a73fa3a7e" >
-        </meta-data>
-        <meta-data
-            android:name="BaiduMobAd_STAT_ID"
-            android:value="110a619720" />
     </application>
 
 </manifest>
