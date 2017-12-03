@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.baidu.mobstat.StatService;
 import com.google.gson.Gson;
 import com.yhb.myyouhui.BaseActivity;
 import com.yhb.myyouhui.R;
@@ -30,7 +31,9 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -229,6 +232,9 @@ private TagFlowLayout mFlowLayout;
            // queryData("");
         }
         et_search.setSelection(keyword.length());
+        Map<String,String> hashMap=new HashMap<>();
+        hashMap.put("keyword",keyword);
+        StatService.onEvent(getBaseContext(),"search","搜索",1,hashMap);
         // TODO 根据输入的内容模糊查询商品，并跳转到另一个界面，由你自己去实现
         openActivity(ResultActivity.class, "keyword", keyword);
 

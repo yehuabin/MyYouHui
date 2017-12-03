@@ -21,15 +21,11 @@ import com.yhb.myyouhui.R;
 import com.yhb.myyouhui.adapter.MultiRefreshAdapter;
 import com.yhb.myyouhui.baseadapter.interfaces.OnLoadMoreListener;
 import com.yhb.myyouhui.callback.SearchCallback;
-import com.yhb.myyouhui.callback.TabChangedEvent;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
 import com.yhb.myyouhui.provider.DataProvider;
 import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.utils.LineDecoration;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -51,7 +47,6 @@ public class ProductListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         final View view = inflater.inflate(R.layout.product_fragment, container, false);
         this.inflater = inflater;
         tl_sortType = (TabLayout) view.findViewById(R.id.tl_sortType);
@@ -61,9 +56,15 @@ public class ProductListFragment extends Fragment {
         Bundle bundle = getArguments();
         searchType = bundle.getString("type");
         int position = bundle.getInt("position");
+
         if (searchType.equals("index")) {
             searchModel.setCategory(CategoryUtil.getVal(String.valueOf(position)));
-
+            if (position==1||position==3) {
+                ll_tmall.setVisibility(View.VISIBLE);
+            }
+            else {
+                ll_tmall.setVisibility(View.INVISIBLE);
+            }
         } else {
             searchModel.setKeyword(bundle.getString("keyword"));
         }
@@ -155,6 +156,13 @@ public class ProductListFragment extends Fragment {
         tl_sortType.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if (tl_sortType.getSelectedTabPosition() == 3) {
+                    isPriceDesc = true;
+                    tab.setText("价格∨");
+                }
+                else {
+                    tl_sortType.getTabAt(3).setText("价格");
+                }
                 setSortType();
                 search();
             }
@@ -166,12 +174,22 @@ public class ProductListFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                if (tl_sortType.getSelectedTabPosition() == 3) {
+                    isPriceDesc=!isPriceDesc;
+                   if (isPriceDesc){
+                       tab.setText("价格∨");
+                   }
+                   else {
+                       tab.setText("价格∧");
+                   }
+                }
+                setSortType();
+                search();
             }
         });
         return view;
     }
-
+private boolean isPriceDesc=false;
     private int sortType = 0;
 
     private void setSortType() {
@@ -182,7 +200,12 @@ public class ProductListFragment extends Fragment {
         } else if (tl_sortType.getSelectedTabPosition() == 2) {
             sortType = 9;
         } else if (tl_sortType.getSelectedTabPosition() == 3) {
-            sortType = 3;
+            if (isPriceDesc){
+                sortType = 3;
+            }
+            else {
+                sortType=4;
+            }
         }
     }
 
@@ -204,6 +227,11 @@ public class ProductListFragment extends Fragment {
                     @Override
                     public void run() {
                         if (searchModel.getPage() == 0) {
+                            if (!isOK||data==null||data.size()==0) {
+
+                                mAdapter.setLoadFail();
+                                return;
+                            }
                             mAdapter.setNewData(data);
                         } else {
                             if (data == null || data.size() == 0) {
@@ -218,6 +246,10 @@ public class ProductListFragment extends Fragment {
                             }
                         }
 
+                        if(data.size()<SearchModel.PAGE_SIZE){
+                            mAdapter.loadEnd();
+                            return;
+                        }
                         searchModel.setPage(searchModel.getPage() + 1);
                     }
 
@@ -225,24 +257,6 @@ public class ProductListFragment extends Fragment {
             }
         });
 
-    }
-
-    //首页tab点击刷新当前fragment
-    @Subscribe
-    public void onEvent(TabChangedEvent event) {
-        if (event.getTabPosition()==0||event.getTabPosition()==2) {
-           ll_tmall.setVisibility(View.VISIBLE);
-        }
-        else {
-            ll_tmall.setVisibility(View.INVISIBLE);
-        }
-
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        EventBus.getDefault().unregister(this);
     }
 
 }

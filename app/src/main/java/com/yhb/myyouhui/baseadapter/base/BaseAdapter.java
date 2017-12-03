@@ -7,8 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.yhb.myyouhui.R;
 import com.yhb.myyouhui.baseadapter.Util;
 import com.yhb.myyouhui.baseadapter.ViewHolder;
 import com.yhb.myyouhui.baseadapter.interfaces.OnLoadMoreListener;
@@ -347,6 +350,23 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      */
     public void setEmptyView(View emptyView) {
         mEmptyView = emptyView;
+    }
+
+    public void setLoadFail() {
+        final TextView tv = (TextView) mEmptyView.findViewById(R.id.tv_loading);
+        tv.setText("加载失败，请点击重试");
+        final ProgressBar progressBar = (ProgressBar) mEmptyView.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.INVISIBLE);
+        mEmptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLoadMoreListener != null) {
+                    tv.setText("努力加载中...");
+                    progressBar.setVisibility(View.VISIBLE);
+                    mLoadMoreListener.onLoadMore(true);
+                }
+            }
+        });
     }
 
     /**

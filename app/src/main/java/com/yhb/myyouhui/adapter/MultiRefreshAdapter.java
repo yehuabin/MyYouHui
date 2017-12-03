@@ -42,7 +42,7 @@ public class MultiRefreshAdapter extends MultiBaseAdapter<ProductModel> {
         }
         final String title = item.getTitle().replace("<span class=H>", "").replace("</span>", "");
         final float clientTkRate = item.getTkRate() / 2;
-        final String biz30day = TextUtil.getBiz30day(item.getBiz30day());
+        final int biz30day = item.getBiz30day();
         final String zkPrice = TextUtil.clearZero(item.getZkPrice());
         final String couponAmount = TextUtil.clearZero(item.getCouponAmount());
         final String couponLeftCount = item.getCouponLeftCount();

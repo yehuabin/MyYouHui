@@ -5,18 +5,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.pgyersdk.update.PgyUpdateManager;
-import com.yhb.myyouhui.callback.TabChangedEvent;
 import com.yhb.myyouhui.fragment.ProductListFragment;
 import com.yhb.myyouhui.search.SearchActivity;
 import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.views.NoScrollViewPager;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,6 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-
 
         tab_category = mViewHolder.get(R.id.tab_category);
         vp_list = mViewHolder.get(R.id.vp_list);
@@ -107,23 +105,6 @@ public class MainActivity extends BaseActivity {
         tab_category.setTabMode(TabLayout.MODE_SCROLLABLE);
         tab_category.setupWithViewPager(vp_list);
 
-tab_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        EventBus.getDefault().post(new TabChangedEvent(tab_category.getSelectedTabPosition()));
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-
-    }
-});
-
     }
 
 
@@ -131,6 +112,27 @@ tab_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    //声明一个long类型变量：用于存放上一点击“返回键”的时刻
+    private long mExitTime;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //判断用户是否点击了“返回键”
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //与上次点击返回键时刻作差
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                //大于2000ms则认为是误操作，使用Toast进行提示
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                //并记录下本次点击“返回键”的时刻，以便下次进行判断
+                mExitTime = System.currentTimeMillis();
+            } else {
+                //小于2000ms则认为是用户确实希望退出程序-调用System.exit()方法进行退出
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 

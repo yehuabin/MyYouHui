@@ -26,7 +26,7 @@ import okhttp3.Response;
 public class TaoBaoHelper {
     private static final String TAG = "TaoBaoHelper";
 
-    public static CookieModel GLOABL_COOKIE ;
+    public static CookieModel GLOABL_COOKIE=new CookieModel() ;
     //private static  String searchCookie = "frKiEpBaJFECAT2kgLpjUqMb";
     public static void generateCoupon(String auctionId,Callback callback){
         OkHttpClient okHttpClient = getClient("cookie2",getCookie());
@@ -102,6 +102,7 @@ public class TaoBaoHelper {
     }
 
 public static void loadCookie(BmobDataProvider.LoadCookieCallBack callBack){
+
     BmobDataProvider.loadCookie(callBack);
 }
 

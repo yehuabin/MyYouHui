@@ -5,6 +5,7 @@ import android.util.Log;
 import com.yhb.myyouhui.callback.SearchCallback;
 import com.yhb.myyouhui.model.CookieModel;
 import com.yhb.myyouhui.model.HotKeyModel;
+import com.yhb.myyouhui.model.ProductExtraModel;
 import com.yhb.myyouhui.model.ProductModel;
 import com.yhb.myyouhui.model.SearchModel;
 import com.yhb.myyouhui.utils.TaoBaoHelper;
@@ -15,6 +16,7 @@ import java.util.List;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by smk on 2017/11/28.
@@ -36,7 +38,7 @@ public class BmobDataProvider {
             eq2.addWhereEqualTo("userType", "1");
             andQuerys.add(eq2);
         }
-        eq3.addWhereEqualTo("sortType", searchModel.getSortType());
+        // eq3.addWhereEqualTo("sortType", searchModel.getSortType());
         eq4.addWhereEqualTo("category", searchModel.getCategory());
         andQuerys.add(eq3);
         andQuerys.add(eq4);
@@ -47,7 +49,23 @@ public class BmobDataProvider {
         //返回50条数据，如果不加上这条语句，默认返回10条数据
         query.setLimit(SearchModel.PAGE_SIZE);
         query.setSkip(searchModel.getPage() * SearchModel.PAGE_SIZE);
-        query.order("-createdAt");
+        switch (searchModel.getSortType()) {
+            case 1:
+                query.order("-tkRate");
+                break;
+            case 3:
+                query.order("-zkPrice");
+                break;
+            case 4:
+                query.order("zkPrice");
+            case 9:
+                query.order("-biz30day");
+                break;
+            default:
+                query.order("-createdAt");
+                break;
+        }
+
         //执行查询方法
         query.findObjects(new FindListener<ProductModel>() {
             @Override
@@ -79,30 +97,66 @@ public class BmobDataProvider {
     }
 
     public static void loadCookie(final LoadCookieCallBack callBack) {
-       try{
-           BmobQuery<CookieModel> bmobQuery = new BmobQuery<CookieModel>();
-           bmobQuery.addWhereEqualTo("type", "token");
-           bmobQuery.setLimit(1);
-           bmobQuery.findObjects(new FindListener<CookieModel>() {
-               @Override
-               public void done(List<CookieModel> list, BmobException e) {
-                   if (e == null) {
-                       TaoBaoHelper.GLOABL_COOKIE = list.get(0);
-                       if (callBack != null) {
-                           callBack.execute(list.get(0));
-                       }
-                   } else {
-                       Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                   }
-               }
-           });
-       }catch (Exception e){
+        try {
+            BmobQuery<CookieModel> bmobQuery = new BmobQuery<CookieModel>();
+            bmobQuery.addWhereEqualTo("type", "token");
+            bmobQuery.setLimit(1);
+            bmobQuery.findObjects(new FindListener<CookieModel>() {
+                @Override
+                public void done(List<CookieModel> list, BmobException e) {
+                    if (e == null) {
+                        TaoBaoHelper.GLOABL_COOKIE = list.get(0);
+                        if (callBack != null) {
+                            callBack.execute(list.get(0));
+                        }
+                    } else {
+                        Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    }
+                }
+            });
+        } catch (Exception e) {
 
-       }
+        }
 
     }
 
     public interface LoadCookieCallBack {
         void execute(CookieModel cookieModel);
+    }
+
+    public static void setProductExtraModel(String auctionId, final ProductExtraModel productExtraModel) {
+        try {
+            BmobQuery<ProductExtraModel> bmobQuery = new BmobQuery<ProductExtraModel>();
+            bmobQuery.addQueryKeys("auctionId,couponLinkTaoToken,couponLink");
+            bmobQuery.addWhereEqualTo("auctionId", auctionId);
+            bmobQuery.setLimit(1);
+
+            bmobQuery.findObjects(new FindListener<ProductExtraModel>() {
+                @Override
+                public void done(List<ProductExtraModel> list, BmobException e) {
+                    if (e == null) {
+                        ProductExtraModel item = list.get(0);
+                        productExtraModel.setCouponLink(item.getCouponLink());
+                        productExtraModel.setCouponLinkTaoToken(item.getCouponLinkTaoToken());
+                        productExtraModel.setAuctionId(item.getAuctionId());
+                    } else {
+                        Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    }
+                }
+            });
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static void updateProductLink(ProductExtraModel productExtraModel) {
+       productExtraModel.save(new SaveListener<String>() {
+           @Override
+           public void done(String s, BmobException e) {
+               if (e!=null){
+                   Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+               }
+           }
+       });
     }
 }

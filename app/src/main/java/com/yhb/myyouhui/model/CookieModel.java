@@ -10,7 +10,7 @@ public class CookieModel extends BmobObject {
     private String cookie;
     private String remark;
     private String state;
-    private boolean isSuccess;
+    private boolean isSuccess=false;
 
     public boolean isSuccess() {
         return isSuccess;
