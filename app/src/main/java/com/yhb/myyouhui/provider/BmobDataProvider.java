@@ -120,12 +120,19 @@ public class BmobDataProvider {
 
     }
 
+    public static void setFailCookie(CookieModel cookieModel){
+        cookieModel.setValue("isSuccess",cookieModel.isSuccess());
+        cookieModel.setValue("state","client");
+        cookieModel.update(cookieModel.getObjectId(),null);
+    }
+
     public interface LoadCookieCallBack {
         void execute(CookieModel cookieModel);
     }
 
     public static void setProductExtraModel(String auctionId, final ProductExtraModel productExtraModel) {
         try {
+            productExtraModel.setAuctionId(auctionId);
             BmobQuery<ProductExtraModel> bmobQuery = new BmobQuery<ProductExtraModel>();
             bmobQuery.addQueryKeys("auctionId,couponLinkTaoToken,couponLink");
             bmobQuery.addWhereEqualTo("auctionId", auctionId);
@@ -134,11 +141,11 @@ public class BmobDataProvider {
             bmobQuery.findObjects(new FindListener<ProductExtraModel>() {
                 @Override
                 public void done(List<ProductExtraModel> list, BmobException e) {
-                    if (e == null) {
+                    if (e == null&&list.size()>0) {
                         ProductExtraModel item = list.get(0);
                         productExtraModel.setCouponLink(item.getCouponLink());
                         productExtraModel.setCouponLinkTaoToken(item.getCouponLinkTaoToken());
-                        productExtraModel.setAuctionId(item.getAuctionId());
+
                     } else {
                         Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                     }

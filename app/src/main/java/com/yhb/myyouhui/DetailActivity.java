@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.baidu.mobstat.StatService;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.yhb.myyouhui.model.CookieModel;
 import com.yhb.myyouhui.model.CouponModel;
 import com.yhb.myyouhui.model.ProductDetailModel;
 import com.yhb.myyouhui.model.ProductExtraModel;
@@ -29,7 +30,9 @@ import com.yhb.myyouhui.views.ResizableImageView;
 import com.yhb.myyouhui.views.SmartScrollView;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,7 +48,8 @@ public class DetailActivity extends BaseActivity {
     SmartScrollView scrollView;
     LinearLayout ll_content;
     boolean isWifi;
-    ProductExtraModel productExtraModel=new ProductExtraModel();
+    ProductExtraModel productExtraModel = new ProductExtraModel();
+    Map<String,String> hashMap=new HashMap<>();
 
     @Override
     protected int getLayoutId() {
@@ -67,13 +71,15 @@ public class DetailActivity extends BaseActivity {
         String couponLeftCount = intent.getStringExtra("couponLeftCount");//优惠券剩余
         final String couponAmount = intent.getStringExtra("couponAmount");//优惠券金额
         String zkPrice = intent.getStringExtra("zkPrice");//现价
-        int biz30day = intent.getIntExtra("biz30day",0);//已售
+        int biz30day = intent.getIntExtra("biz30day", 0);//已售
         String tkRate = intent.getStringExtra("tkRate");//返现
         final String auctionId = intent.getStringExtra("auctionId");
         float couponStartFee = intent.getFloatExtra("couponStartFee", 0);//满多少使用
         String userType = intent.getStringExtra("userType");//是否天猫
         String commFee = intent.getStringExtra("commFee");//可领红包
-        BmobDataProvider.setProductExtraModel(auctionId,productExtraModel);
+        hashMap.put("title",title);
+        StatService.onEvent(getBaseContext(), "detail", "宝贝详情", 1,hashMap);
+        BmobDataProvider.setProductExtraModel(auctionId, productExtraModel);
         if (isWifi) {
             mViewHolder.get(R.id.iv_click).setVisibility(View.GONE);
             mViewHolder.get(R.id.tv_content).setVisibility(View.GONE);
@@ -130,8 +136,8 @@ public class DetailActivity extends BaseActivity {
                         finish();
                         break;
                     case R.id.broswerBuy:
-                        StatService.onEvent(getBaseContext(),"broswerBuy","浏览器打开",1);
-                        if (productExtraModel.getCouponLink().length()>0){
+                        StatService.onEvent(getBaseContext(), "broswerBuy", "浏览器打开", 1,hashMap);
+                        if (productExtraModel.getCouponLink().length() > 0) {
                             broswerBuy(productExtraModel.getCouponLink());
                             return;
                         }
@@ -143,8 +149,8 @@ public class DetailActivity extends BaseActivity {
                         });
                         break;
                     case R.id.appBuy:
-                        StatService.onEvent(getBaseContext(),"taokouling","淘口令",1);
-                        if (productExtraModel.getCouponLinkTaoToken().length()>0){
+                        StatService.onEvent(getBaseContext(), "taokouling", "淘口令", 1,hashMap);
+                        if (productExtraModel.getCouponLinkTaoToken().length() > 0) {
                             appBuy(productExtraModel.getCouponLinkTaoToken());
                             return;
                         }
@@ -155,7 +161,7 @@ public class DetailActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                       appBuy(link);
+                                        appBuy(link);
                                     }
                                 });
                             }
@@ -221,7 +227,7 @@ public class DetailActivity extends BaseActivity {
         });
     }
 
-    private void broswerBuy(String link){
+    private void broswerBuy(String link) {
 
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
@@ -230,11 +236,12 @@ public class DetailActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void appBuy(String link){
+    private void appBuy(String link) {
         ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         cm.setText(link);
         toastLong("复制成功，请打开手机淘宝");
     }
+
     private void loadMore() {
         if (images == null || images.size() == 0) {
             return;
@@ -275,7 +282,7 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void share(String auctionId, final MyCallBack callBack) {
-        if (!TaoBaoHelper.GLOABL_COOKIE.isSuccess()){
+        if (!TaoBaoHelper.GLOABL_COOKIE.isSuccess()) {
             toastLong("服务器忙，请稍后重试");
             BmobDataProvider.loadCookie(null);
             return;
@@ -293,32 +300,43 @@ public class DetailActivity extends BaseActivity {
                 if (response.request().url().host().equals("pub.alimama.com")) {
                     CouponModel couponModel = new Gson().fromJson(json, CouponModel.class);
                     if (couponModel.isOk()) {
-                        if(productExtraModel.getAuctionId().length()>0
-                                &&(productExtraModel.getCouponLink().length()==0||
-                                productExtraModel.getCouponLinkTaoToken().length()==0)){
+                        if ( productExtraModel.getCouponLink().length() == 0
+                                || productExtraModel.getCouponLinkTaoToken().length() == 0) {
                             productExtraModel.setCouponLink(getCouponLink(couponModel));
                             productExtraModel.setCouponLinkTaoToken(getCouponLinkTaoToken(couponModel));
-                            BmobDataProvider.updateProductLink(productExtraModel);//更新数据库链接信息
+                            BmobDataProvider.updateProductLink(productExtraModel);//保存淘口令
                         }
                         callBack.execute(couponModel);
                     }
                 } else {
                     toastLong("复制失败，请稍后重试");
-                    BmobDataProvider.loadCookie(null);
+                    BmobDataProvider.loadCookie(new BmobDataProvider.LoadCookieCallBack() {
+                        @Override
+                        public void execute(CookieModel cookieModel) {
+                            if (cookieModel.isSuccess()
+                                    && cookieModel.getCookie() == TaoBaoHelper.getCookie()) {
+                                //说明过期，更新状态
+                                cookieModel.setSuccess(false);
+                                BmobDataProvider.setFailCookie(cookieModel);
+                            }
+                        }
+                    });
                 }
 
             }
         });
 
     }
-    private String getCouponLink( CouponModel result){
+
+    private String getCouponLink(CouponModel result) {
         return result.getData().getCouponLink() != null &&
                 result.getData().getCouponLink().length() > 0 ?
                 result.getData().getCouponLink() : result.getData().getClickUrl();
 
     }
-    private String getCouponLinkTaoToken( CouponModel result){
-       return result.getData().getCouponLinkTaoToken() != null &&
+
+    private String getCouponLinkTaoToken(CouponModel result) {
+        return result.getData().getCouponLinkTaoToken() != null &&
                 result.getData().getCouponLinkTaoToken().length() > 0 ?
                 result.getData().getCouponLinkTaoToken() :
                 result.getData().getTaoToken();
