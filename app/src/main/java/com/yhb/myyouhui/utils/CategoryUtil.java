@@ -11,7 +11,7 @@ public class CategoryUtil {
     private static Map<String, String[]> maps = new HashMap<>();
 
     static {
-        maps.put("0", new String[]{"推荐", "zonghe"});
+        maps.put("0", new String[]{"推荐", "tuijian"});
         maps.put("1", new String[]{"女装", "nzjh"});
         maps.put("2", new String[]{"男装", "nanz"});
         maps.put("3", new String[]{"母婴", "muying"});

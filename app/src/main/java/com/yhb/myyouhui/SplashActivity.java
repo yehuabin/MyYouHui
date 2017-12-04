@@ -32,7 +32,7 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 enterHomeActivity();
             }
-        }, 1000);
+        }, 2000);
 
     }
     protected void setFullScreen(){

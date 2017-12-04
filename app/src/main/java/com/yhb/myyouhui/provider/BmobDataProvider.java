@@ -17,6 +17,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by smk on 2017/11/28.
@@ -38,7 +39,9 @@ public class BmobDataProvider {
             eq2.addWhereEqualTo("userType", "1");
             andQuerys.add(eq2);
         }
-        // eq3.addWhereEqualTo("sortType", searchModel.getSortType());
+        if (!searchModel.getCategory().equals("tuijian")) {
+            eq3.addWhereEqualTo("sortType", searchModel.getSortType());
+        }
         eq4.addWhereEqualTo("category", searchModel.getCategory());
         andQuerys.add(eq3);
         andQuerys.add(eq4);
@@ -58,6 +61,7 @@ public class BmobDataProvider {
                 break;
             case 4:
                 query.order("zkPrice");
+                break;
             case 9:
                 query.order("-biz30day");
                 break;
@@ -123,7 +127,12 @@ public class BmobDataProvider {
     public static void setFailCookie(CookieModel cookieModel){
         cookieModel.setValue("isSuccess",cookieModel.isSuccess());
         cookieModel.setValue("state","client");
-        cookieModel.update(cookieModel.getObjectId(),null);
+        cookieModel.update(cookieModel.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+
+            }
+        });
     }
 
     public interface LoadCookieCallBack {

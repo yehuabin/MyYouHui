@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MY优惠</string>
-    <string name="search_text">请输入要搜索的宝贝名称</string>
+    <string name="search_text">请输入要搜索的宝贝</string>
     <string name="scale_down_show_behavior">com.yhb.myyouhui.utils.ScaleDownShowBehavior</string>
 </resources>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.baidu.mobstat.StatService;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.yhb.myyouhui.fragment.ProductListFragment;
 import com.yhb.myyouhui.search.SearchActivity;
@@ -18,7 +19,9 @@ import com.yhb.myyouhui.utils.CategoryUtil;
 import com.yhb.myyouhui.views.NoScrollViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
@@ -102,6 +105,24 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < CategoryUtil.getCount(); i++) {
             tab_category.addTab(tab_category.newTab().setText(CategoryUtil.getText(String.valueOf(i))));
         }
+        tab_category.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Map<String,String> hashMap=new HashMap<>();
+                hashMap.put("title",tab.getText().toString());
+                StatService.onEvent(getBaseContext(), "tab", "宝贝分类", 1,hashMap);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         tab_category.setTabMode(TabLayout.MODE_SCROLLABLE);
         tab_category.setupWithViewPager(vp_list);
 

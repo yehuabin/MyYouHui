@@ -246,7 +246,7 @@ private boolean isPriceDesc=false;
                             }
                         }
 
-                        if(data.size()<SearchModel.PAGE_SIZE){
+                        if(data==null||data.size()<SearchModel.PAGE_SIZE){
                             mAdapter.loadEnd();
                             return;
                         }

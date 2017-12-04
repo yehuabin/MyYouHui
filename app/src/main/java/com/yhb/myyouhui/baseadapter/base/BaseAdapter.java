@@ -354,7 +354,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     public void setLoadFail() {
         final TextView tv = (TextView) mEmptyView.findViewById(R.id.tv_loading);
-        tv.setText("加载失败，请点击重试");
+        tv.setText("好像没数据了，请点击重试");
         final ProgressBar progressBar = (ProgressBar) mEmptyView.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.INVISIBLE);
         mEmptyView.setOnClickListener(new View.OnClickListener() {
