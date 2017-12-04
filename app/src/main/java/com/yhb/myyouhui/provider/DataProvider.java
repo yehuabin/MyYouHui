@@ -11,12 +11,16 @@ import com.yhb.myyouhui.utils.TaoBaoHelper;
 public class DataProvider {
     public static void search(final SearchModel searchModel, final SearchCallback searchCallback) {
 
-        if (searchModel.getSearchType().equals("search")) {
-            //调用淘宝搜索
-            TaoBaoHelper.search(searchModel, searchCallback);
-        } else {
-            BmobDataProvider.search(searchModel, searchCallback);
+        try {
+            if (searchModel.getSearchType().equals("search")) {
+                //调用淘宝搜索
+                TaoBaoHelper.search(searchModel, searchCallback);
+            } else {
+                BmobDataProvider.search(searchModel, searchCallback);
+            }
         }
+        catch (Exception e){
 
+        }
     }
 }

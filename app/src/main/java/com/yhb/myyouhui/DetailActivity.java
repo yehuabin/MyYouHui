@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.yhb.myyouhui.model.CookieModel;
 import com.yhb.myyouhui.model.CouponModel;
+import com.yhb.myyouhui.model.LogModel;
 import com.yhb.myyouhui.model.ProductDetailModel;
 import com.yhb.myyouhui.model.ProductExtraModel;
 import com.yhb.myyouhui.provider.BmobDataProvider;
@@ -310,6 +311,13 @@ public class DetailActivity extends BaseActivity {
                     }
                 } else {
                     toastLong("复制失败，请稍后重试");
+
+                    LogModel logModel=new LogModel();
+                    logModel.setCreator("client");
+                    logModel.setModule("cookie");
+                    logModel.setAction("cookie失效");
+                    logModel.setRemark("cookie:"+TaoBaoHelper.GLOABL_COOKIE.getCookie());
+                    BmobDataProvider.saveLog(logModel);
                     BmobDataProvider.loadCookie(new BmobDataProvider.LoadCookieCallBack() {
                         @Override
                         public void execute(CookieModel cookieModel) {
