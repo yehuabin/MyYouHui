@@ -97,9 +97,28 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recylerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
+            <ImageView
+                android:id="@+id/iv_backtop"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+
+                android:layout_margin="15dp"
+                android:alpha="0.9"
+                android:src="@drawable/backtop" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

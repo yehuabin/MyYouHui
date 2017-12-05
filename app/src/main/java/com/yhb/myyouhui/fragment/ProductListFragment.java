@@ -101,7 +101,7 @@ public class ProductListFragment extends Fragment {
 
         recyclerView.setAdapter(mAdapter);
 
-        final ImageView fab = (ImageView) getActivity().findViewById(R.id.iv_backtop);
+        final ImageView fab = (ImageView) view.findViewById(R.id.iv_backtop);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int firstVisibleItem = 0;
 
@@ -119,12 +119,11 @@ public class ProductListFragment extends Fragment {
                 }
             }
         });
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecyclerView r = (RecyclerView) getActivity().findViewById(R.id.recylerView);
-                r.smoothScrollToPosition(0);
+              //  RecyclerView r = (RecyclerView) view.findViewById(R.id.recylerView);
+               recyclerView.smoothScrollToPosition(0);
             }
         });
 

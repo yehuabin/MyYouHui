@@ -27,6 +27,26 @@ import cn.bmob.v3.listener.UpdateListener;
 public class BmobDataProvider {
     public static void search(final SearchModel searchModel, final SearchCallback searchCallback) {
         try {
+
+            BmobQuery<ProductModel> query = new BmobQuery<ProductModel>();
+            switch (searchModel.getSortType()) {
+                case 1:
+                    query.order("-order,-tkRate");
+                    break;
+                case 3:
+                    query.order("-order,-zkPrice");
+                    break;
+                case 4:
+                    query.order("-order,zkPrice");
+                    break;
+                case 9:
+                    query.order("-order,-biz30day");
+                    break;
+                default:
+                    query.order("-order,-createdAt");
+                    break;
+            }
+
             BmobQuery<ProductModel> eq1 = new BmobQuery<ProductModel>();
             BmobQuery<ProductModel> eq2 = new BmobQuery<ProductModel>();
             BmobQuery<ProductModel> eq3 = new BmobQuery<ProductModel>();
@@ -40,36 +60,21 @@ public class BmobDataProvider {
                 eq2.addWhereEqualTo("userType", "1");
                 andQuerys.add(eq2);
             }
-            if (!searchModel.getCategory().equals("tuijian")) {
-                eq3.addWhereEqualTo("sortType", searchModel.getSortType());
-            }
+//            if (!searchModel.getCategory().equals("tuijian")) {
+//                eq3.addWhereEqualTo("sortType", searchModel.getSortType());
+//            }
+
             eq4.addWhereEqualTo("category", searchModel.getCategory());
             andQuerys.add(eq3);
             andQuerys.add(eq4);
 
 
-            BmobQuery<ProductModel> query = new BmobQuery<ProductModel>();
+
             query.and(andQuerys);
             //返回50条数据，如果不加上这条语句，默认返回10条数据
             query.setLimit(SearchModel.PAGE_SIZE);
             query.setSkip(searchModel.getPage() * SearchModel.PAGE_SIZE);
-            switch (searchModel.getSortType()) {
-                case 1:
-                    query.order("-tkRate");
-                    break;
-                case 3:
-                    query.order("-zkPrice");
-                    break;
-                case 4:
-                    query.order("zkPrice");
-                    break;
-                case 9:
-                    query.order("-biz30day");
-                    break;
-                default:
-                    query.order("-createdAt");
-                    break;
-            }
+
 
             //执行查询方法
             query.findObjects(new FindListener<ProductModel>() {

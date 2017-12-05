@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways">
+           >
 
         <TextView
             android:layout_width="60dp"
@@ -88,13 +88,13 @@
             android:layout_height="wrap_content"></include>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_backtop"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="15dp"
-        android:alpha="0.9"
-        android:src="@drawable/backtop" />
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_backtop"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_margin="15dp"-->
+        <!--android:alpha="0.9"-->
+        <!--android:src="@drawable/backtop" />-->
 
 </android.support.design.widget.CoordinatorLayout>

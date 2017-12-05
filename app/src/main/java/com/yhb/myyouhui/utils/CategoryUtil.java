@@ -15,11 +15,11 @@ public class CategoryUtil {
         maps.put("1", new String[]{"女装", "nzjh"});
         maps.put("2", new String[]{"男装", "nanz"});
         maps.put("3", new String[]{"母婴", "muying"});
-        maps.put("4", new String[]{"食品", "hch"});
-        maps.put("5", new String[]{"家居", "jyj"});
-        maps.put("6", new String[]{"亲宝贝", "qbb"});
-        maps.put("7", new String[]{"运动户外", "kdc"});
-        maps.put("8", new String[]{"时尚", "ifs"});
+        maps.put("4", new String[]{"时尚", "ifs"});
+        maps.put("5", new String[]{"食品", "hch"});
+        maps.put("6", new String[]{"家居", "jyj"});
+        maps.put("7", new String[]{"亲宝贝", "qbb"});
+        maps.put("8", new String[]{"运动户外", "kdc"});
         maps.put("9", new String[]{"9块9", "9k9"});
         maps.put("10", new String[]{"20元封顶", "20k"});
         maps.put("11", new String[]{"特价好货", "tehui"});
