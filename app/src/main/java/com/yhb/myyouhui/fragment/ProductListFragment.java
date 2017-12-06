@@ -44,6 +44,7 @@ public class ProductListFragment extends Fragment {
     String searchType;
     Handler handler = new Handler();
     LinearLayout ll_tmall;
+    boolean isLoadingMore=true;
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,11 +87,16 @@ public class ProductListFragment extends Fragment {
         //加载完成，更新footer view提示
         mAdapter.setLoadEndView(R.layout.load_end_layout);
 
+
         //设置加载更多触发的事件监听
         mAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(boolean isReload) {
-                   loadData();
+                  if (isLoadingMore){
+                      isLoadingMore=false;
+                      loadData();
+
+                  }
             }
         });
 
@@ -250,6 +256,7 @@ private boolean isPriceDesc=false;
                             return;
                         }
                         searchModel.setPage(searchModel.getPage() + 1);
+                        isLoadingMore=true;
                     }
 
                 });
