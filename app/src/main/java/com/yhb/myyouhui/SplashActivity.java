@@ -25,7 +25,8 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         setFullScreen();
-
+        Bmob.initialize(this, "9be40913fa1a1f940dc81aafa1139757");
+        BmobDataProvider.setHotKey();
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -51,8 +52,7 @@ public class SplashActivity extends BaseActivity {
         }
     }
     private void enterHomeActivity() {
-        Bmob.initialize(this, "9be40913fa1a1f940dc81aafa1139757");
-        BmobDataProvider.setHotKey();
+
         StatService.start(this);
         TaoBaoHelper.loadCookie(null);
         Intent intent = new Intent(this, MainActivity.class);

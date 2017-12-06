@@ -134,7 +134,27 @@ public class BmobDataProvider {
         }
 
     }
+    public static void loadHelp(final LoadCookieCallBack callBack) {
+        try {
+            BmobQuery<CookieModel> bmobQuery = new BmobQuery<CookieModel>();
+            bmobQuery.addWhereEqualTo("type", "help");
+            bmobQuery.setLimit(1);
+            bmobQuery.findObjects(new FindListener<CookieModel>() {
+                @Override
+                public void done(List<CookieModel> list, BmobException e) {
+                    if (e == null) {
+                        TaoBaoHelper.GLOABL_COOKIE = list.get(0);
+                        if (callBack != null) {
+                            callBack.execute(list.get(0));
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
 
+        }
+
+    }
     public static void setFailCookie(CookieModel cookieModel) {
         try {
             cookieModel.setValue("isSuccess", cookieModel.isSuccess());

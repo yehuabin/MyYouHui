@@ -309,6 +309,13 @@ public class DetailActivity extends BaseActivity {
                         }
                         callBack.execute(couponModel);
                     }
+                    else {
+                        if (couponModel.getInfo()!=null&&couponModel.getInfo().getMessage()!=null)
+                        { toastLong(couponModel.getInfo().getMessage().toString());}
+                        else {
+                            toastLong("该宝贝已经失效");
+                        }
+                    }
                 } else {
                     toastLong("复制失败，请稍后重试");
 
