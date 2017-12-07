@@ -231,6 +231,7 @@ private boolean isPriceDesc=false;
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        isLoadingMore=true;
                         if (searchModel.getPage() == 0) {
                             if (!isOK||data==null||data.size()==0) {
 
@@ -251,12 +252,13 @@ private boolean isPriceDesc=false;
                             }
                         }
 
+                        //最后一页数量小于Size说明加载到最后一页了
                         if(data==null||data.size()<SearchModel.PAGE_SIZE){
                             mAdapter.loadEnd();
                             return;
                         }
                         searchModel.setPage(searchModel.getPage() + 1);
-                        isLoadingMore=true;
+
                     }
 
                 });
